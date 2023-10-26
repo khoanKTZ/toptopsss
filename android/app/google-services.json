@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "64516111213",
+    "firebase_url": "https://khoanubu-default-rtdb.firebaseio.com",
+    "project_id": "khoanubu",
+    "storage_bucket": "khoanubu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64516111213:android:6d187c579b10b5577e3864",
+        "android_client_info": {
+          "package_name": "com.example.chat_app_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64516111213-30o3gpoid0jv0aicjnbkq5uuqimk4cs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXXR6myPJSxe3Ls1l-g-DVgUOMIy1_1hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64516111213-28t37c0ia7tnv6s20767v9pi02vsehfr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "64516111213-2emdm50co07afdopnv2dtk49lbf7vbvb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatAppProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64516111213:android:76d62f00ad5392067e3864",
+        "android_client_info": {
+          "package_name": "com.example.tiktok_app_poly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64516111213-30o3gpoid0jv0aicjnbkq5uuqimk4cs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXXR6myPJSxe3Ls1l-g-DVgUOMIy1_1hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64516111213-28t37c0ia7tnv6s20767v9pi02vsehfr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "64516111213-2emdm50co07afdopnv2dtk49lbf7vbvb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatAppProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
