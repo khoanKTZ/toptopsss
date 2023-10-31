@@ -126,7 +126,9 @@ class ChatScreen extends StatelessWidget {
                                       ),
                                       trailing: Wrap(spacing: 20, children: [
                                         InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            print('Khoan đã Nhấp');
+                                          },
                                           child: const Icon(
                                             Icons.chat,
                                             color: Colors.grey,

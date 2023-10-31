@@ -15,6 +15,7 @@ import '../../../widgets/video_player_item.dart';
 class VideoProfileScreen extends StatelessWidget {
   final String videoID;
   VideoProfileScreen({Key? key, required this.videoID}) : super(key: key);
+  List<String> comments = [];
 
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
@@ -79,6 +80,95 @@ class VideoProfileScreen extends StatelessWidget {
     );
   }
 
+  _showDialog(BuildContext context, String idexx, String videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _deleteComment(context, idexx, videoId);
+                },
+                child: Text("Delete"),
+              ),
+              TextButton(
+                onPressed: () {
+                  print('Khoan đã click');
+                  _showUpdateDialog(context, idexx, videoID);
+                  // _showBottomSheet(context, videoID);
+                },
+                child: Text("Update"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng hộp thoại
+                },
+                child: Text("Cancel"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // xoá connent
+  _deleteComment(BuildContext context, String idexx, String videoID) async {
+    videos.doc(videoID).collection('commentList').doc(idexx).delete();
+    Navigator.pop(context);
+  }
+
+  void _updateComment(String videoID, String commentId, String comment,
+      BuildContext context) async {
+    return await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc(commentId)
+        .update({'content': comment});
+  }
+
+  TextEditingController _textEditingController =
+      TextEditingController(); // Khai báo ở cấp độ lớp
+
+  Future<void> _showUpdateDialog(
+      BuildContext context, String indexT, String videoID) async {
+    _textEditingController.text = ''; // Đặt giá trị ban đầu cho TextField
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Cập nhật bình luận"),
+          content: TextField(
+            controller: _textEditingController, // Gán controller cho TextField
+            textAlignVertical: TextAlignVertical.bottom,
+            decoration: InputDecoration(hintText: 'Nhập nội dung bình luận'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Lưu'),
+              onPressed: () {
+                String comment = _textEditingController.text;
+                _updateComment(videoID, indexT, comment, context);
+                print(indexT);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> sendComment(String message, String videoID) async {
     if (message == '') return;
     final result = await users.doc(uid).get();
@@ -99,6 +189,46 @@ class VideoProfileScreen extends StatelessWidget {
       'id': 'Comment $len',
       'likes': []
     }).then((value) async {});
+  }
+
+  Future<void> sendCommentList(String message, String videoID) async {
+    if (message == '') return;
+
+    final result = await users.doc(uid).get();
+    final String avatarURL = result.get('avartaURL');
+    final String userName = result.get('fullName');
+
+    int so = 0;
+
+    var allDocs = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc('Comment $so')
+        .collection('repcomment')
+        .get();
+    int len = allDocs.docs.length;
+
+    await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc('Comment $len')
+        .collection('repcomment')
+        .doc('RepCount $len')
+        .set({
+          'createdOn': FieldValue.serverTimestamp(),
+          'uID': uid,
+          'content': message,
+          'avatarURL': avatarURL,
+          'userName': userName,
+          'id': 'Comment $len',
+          'likes': []
+        })
+        .then((value) {})
+        .catchError((error) {
+          print("Lỗi khi thêm dữ liệu vào repcomment: $error");
+        });
   }
 
   _showBottomSheet(BuildContext context, String videoID) {
@@ -129,7 +259,6 @@ class VideoProfileScreen extends StatelessWidget {
                       child: Container(),
                     );
                   }
-                  //Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   if (snapshot.hasData) {
                     return Text(
                       '${snapshot.data!.docs.length} Comments',
@@ -198,24 +327,59 @@ class VideoProfileScreen extends StatelessWidget {
                                                     .width *
                                                 3 /
                                                 4,
-                                            child: Text(
-                                              '${item['content']}',
-                                              style: const TextStyle(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                // Xử lý sự kiện khi chạm vào Text
+                                                String indexite =
+                                                    item.get('id').toString();
+                                                String idCheck =
+                                                    item.get('uID').toString();
+                                                if (uid == idCheck) {
+                                                  _showDialog(context, indexite,
+                                                      videoID);
+                                                }
+                                              },
+                                              child: Text(
+                                                '${item['content']}',
+                                                style: const TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.black,
-                                                  fontFamily: 'Popins'),
+                                                  fontFamily: 'Popins',
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          Text(
-                                            item['createdOn'] == null
-                                                ? DateTime.now().toString()
-                                                : DateFormat.yMMMd()
-                                                    .add_jm()
-                                                    .format(item['createdOn']
-                                                        .toDate()),
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black38),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                item['createdOn'] == null
+                                                    ? DateTime.now().toString()
+                                                    : DateFormat.yMMMd()
+                                                        .add_jm()
+                                                        .format(
+                                                            item['createdOn']
+                                                                .toDate()),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black38,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                  width:
+                                                      8), // Khoảng cách giữa "Trả lời" và thời gian
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    _showBottomSheetoooo(
+                                                        context, videoID),
+                                                child: const Text(
+                                                  'Trả lời',
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black38,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -246,6 +410,8 @@ class VideoProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+
+                                // comment trả lời...
                               ],
                             );
                           },
@@ -281,7 +447,7 @@ class VideoProfileScreen extends StatelessWidget {
                     },
                     icon: Icon(
                       Icons.send_rounded,
-                      color: MyColors.thirdColor,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -439,6 +605,7 @@ class VideoProfileScreen extends StatelessWidget {
                                             onTap: () {
                                               _showBottomSheet(
                                                   context, item.id);
+                                              print('JKhoan nhấp ccc');
                                             },
                                             child: const Icon(
                                               CupertinoIcons
@@ -462,7 +629,7 @@ class VideoProfileScreen extends StatelessWidget {
                                                 return const Text(
                                                     'Something went wrong');
                                               }
-                                              //Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
                                               if (snapshot.hasData) {
                                                 return Text(
                                                   '${snapshot.data!.docs.length}',
@@ -528,6 +695,41 @@ class VideoProfileScreen extends StatelessWidget {
           return Container();
         },
       ),
+    );
+  }
+
+  void _showBottomSheetoooo(BuildContext context, String videoID) {
+    TextEditingController _textEditingController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Đảm bảo BottomSheet mở rộng tới đáy màn hình
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          height: MediaQuery.of(context).size.height *
+              0.33, // Chiều cao khoảng 1/3 màn hình
+          child: Column(
+            children: [
+              TextField(
+                controller: _textEditingController,
+                decoration: InputDecoration(
+                  hintText: 'Nhập nội dung',
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  String comment = _textEditingController.text;
+                  sendCommentList(comment, videoID);
+                  _textEditingController.clear();
+                },
+                child: Icon(Icons.send),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

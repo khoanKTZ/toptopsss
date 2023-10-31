@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import '../../views/pages/home/chat_page/chat_detail_page/chat_detail_screen.dart';
 
 class ChatService {
-  static get chatDocID => null;
-
   static getChatID(
       {required BuildContext context,
       required String peopleID,
@@ -13,6 +11,7 @@ class ChatService {
       required String peopleImage,
       required String peopleName}) {
     CollectionReference chats = FirebaseFirestore.instance.collection('chats');
+    String chatDocID;
     chats
         .where('users', isEqualTo: {peopleID: null, currentUserID: null})
         .limit(1)
@@ -20,6 +19,7 @@ class ChatService {
         .then(
           (QuerySnapshot querySnapshot) {
             if (querySnapshot.docs.isNotEmpty) {
+              chatDocID = querySnapshot.docs.single.id;
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -35,6 +35,7 @@ class ChatService {
               chats.add({
                 'users': {currentUserID: null, peopleID: null}
               }).then((value) {
+                chatDocID = value.id;
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -52,6 +53,29 @@ class ChatService {
         )
         .catchError((e) {});
   }
+
+  // static getUserIDChatRoom({
+  //   required String currentUserID,
+  // }) {
+  //   CollectionReference chats = FirebaseFirestore.instance.collection('chats');
+  //   String uID = 'uID';
+  //   chats
+  //       .where('messages', whereIn: [currentUserID])
+  //       .limit(3)
+  //       .get()
+  //       .then(
+  //         (QuerySnapshot querySnapshot) {
+  //           if (querySnapshot.docs.isNotEmpty) {
+  //             for (int i = 0; i < querySnapshot.docs.length; i++) {
+  //               print('lap = ${querySnapshot.docs[i].id}');
+  //             }
+  //           } else {
+  //             print('lap = none+ ${querySnapshot.docs}');
+  //           }
+  //         },
+  //       )
+  //       .catchError((e) {});
+  // }
 
   static Future getUserPeopleChatID({required String currentUserID}) async {
     final CollectionReference users =

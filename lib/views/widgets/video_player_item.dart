@@ -21,7 +21,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
         _isPlaying = true;
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
-        // videoPlayerController.pause();
+        videoPlayerController.pause();
       });
     super.initState();
   }

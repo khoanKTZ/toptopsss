@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_screen.dart';
 
 // ignore: must_be_immutable
@@ -18,11 +19,18 @@ class BottomStyleLogin extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ứng dụng đang được phát triển.')));
     } else {
-      if (nameButton == "User phone/ email/ username") {
+      if (nameButton == "User email/ username") {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      }
+
+      if (nameButton == "User Login phone") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => LoginWithPhoneNumber()));
       }
     }
   }

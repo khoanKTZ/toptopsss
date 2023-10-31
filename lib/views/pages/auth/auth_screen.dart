@@ -42,9 +42,13 @@ class _LoginScreenState extends State<LoginAll> {
                     height: 10,
                   ),
                   BottomStyleLogin(
-                      nameButton: "User phone/ email/ username",
+                      nameButton: "User email/ username",
                       checkButton: true,
                       icons: "user.png"),
+                  BottomStyleLogin(
+                      nameButton: "User Login phone",
+                      checkButton: true,
+                      icons: "phone.png"),
                   const SizedBox(
                     height: 10,
                   ),

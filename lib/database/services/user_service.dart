@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:tiktok_app_poly/views/pages/home/home_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/EditProfile.dart';
 
 import '../../views/widgets/snackbar.dart';
 
@@ -54,39 +54,36 @@ class UserService {
   }
 
   //Edit userInfo in firestore cloud
-  static editUserFetch(
-      {required BuildContext context,
-      required age,
-      required gender,
-      required phone,
-      required fullName}) async {
+  //Edit userInfo in firestore cloud
+  static editUserFetch({
+    required BuildContext context,
+    required String collums,
+    required String values,
+  }) async {
     try {
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
-      final storage = const FlutterSecureStorage();
+      final storage = FlutterSecureStorage();
       String? UID = await storage.read(key: 'uID');
       users
           .doc(UID)
           .update({
-            'fullName': fullName,
-            'age': age,
-            'phone': phone,
-            'gender': gender,
+            collums: values,
           })
           .then((value) => print("User Updated"))
           .catchError((error) => print("Failed to update user: $error"));
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => EditProifilePage()),
+          (router) => true);
       getSnackBar(
-        'Edit Info',
+        'Edit $collums',
         'Edit Success.',
         Colors.green,
       ).show(context);
     } catch (e) {
       getSnackBar(
-        'Edit Info',
+        'Edit $collums',
         'Edit Fail. $e',
         Colors.red,
       ).show(context);
@@ -100,7 +97,7 @@ class UserService {
     try {
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
-      final storage = const FlutterSecureStorage();
+      final storage = FlutterSecureStorage();
       String? UID = await storage.read(key: 'uID');
       users
           .doc(UID)

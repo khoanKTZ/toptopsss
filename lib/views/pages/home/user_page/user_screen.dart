@@ -10,7 +10,7 @@ import 'package:tiktok_app_poly/database/services/auth_service.dart';
 import 'package:tiktok_app_poly/database/services/storage_services.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/provider/loading_model.dart';
-import 'package:tiktok_app_poly/views/pages/home/user_page/edit_user_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/EditProfile.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/update_password_screen.dart';
 import 'package:tiktok_app_poly/views/widgets/text.dart';
 
@@ -65,8 +65,9 @@ class _UserInfoScreenState extends State<UserInfoScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  'SIGN OUT',
-                  style: TextStyle(fontSize: 25, color: Colors.red),
+                  'Log out',
+                  style: TextStyle(
+                      fontSize: 25, color: Color.fromARGB(255, 120, 196, 112)),
                 ),
                 Text(
                   'Are you sure ?',
@@ -87,7 +88,7 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                   children: const [
                     Icon(
                       Icons.done,
-                      color: Colors.green,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
                     Padding(
                       padding: EdgeInsets.all(7.0),
@@ -111,7 +112,8 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                       padding: EdgeInsets.all(7.0),
                       child: Text(
                         'No',
-                        style: TextStyle(fontSize: 20, color: Colors.red),
+                        style: TextStyle(
+                            fontSize: 20, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                     ),
                   ],
@@ -317,7 +319,7 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => EditUserInfoScreen()),
+                              builder: (context) => EditProifilePage()),
                         );
                       },
                       child: Container(

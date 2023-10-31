@@ -52,7 +52,7 @@ class LoginWithPhoneNumber extends StatelessWidget {
                           initialCountryCode: 'VN',
                           onCountryChanged: (phone) {
                             myProvider.selectedCountry(
-                                '+${phone.fullCountryCode.toString()}');
+                                '+${phone.fullCountryCode!.toString()}');
                           },
                         )),
                     const SizedBox(
@@ -71,7 +71,7 @@ class LoginWithPhoneNumber extends StatelessWidget {
                             fontSize: 18),
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                          hintText: "VD:0000",
+                          hintText: "VD: 384745334",
                           hintStyle:
                               TextStyle(color: Colors.grey, fontSize: 14),
                           enabledBorder: UnderlineInputBorder(

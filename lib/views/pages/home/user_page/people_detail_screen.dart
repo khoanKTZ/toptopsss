@@ -191,7 +191,7 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                       Column(
                         children: [
                           const Text(
-                            "369",
+                            "0",
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
@@ -213,7 +213,7 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                       Column(
                         children: [
                           const Text(
-                            "369",
+                            "0",
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
