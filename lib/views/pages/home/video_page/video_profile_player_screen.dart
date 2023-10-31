@@ -191,29 +191,27 @@ class VideoProfileScreen extends StatelessWidget {
     }).then((value) async {});
   }
 
-  Future<void> sendCommentList(String message, String videoID) async {
+  Future<void> sendCommentList(
+      String message, String videoID, String idComment) async {
     if (message == '') return;
 
     final result = await users.doc(uid).get();
     final String avatarURL = result.get('avartaURL');
     final String userName = result.get('fullName');
-
-    int so = 0;
-
+    int len = 0;
     var allDocs = await FirebaseFirestore.instance
         .collection('videos')
         .doc(videoID)
         .collection('commentList')
-        .doc('Comment $so')
+        .doc(idComment)
         .collection('repcomment')
         .get();
-    int len = allDocs.docs.length;
-
+    len = allDocs.docs.length;
     await FirebaseFirestore.instance
         .collection('videos')
         .doc(videoID)
         .collection('commentList')
-        .doc('Comment $len')
+        .doc(idComment)
         .collection('repcomment')
         .doc('RepCount $len')
         .set({
@@ -222,7 +220,7 @@ class VideoProfileScreen extends StatelessWidget {
           'content': message,
           'avatarURL': avatarURL,
           'userName': userName,
-          'id': 'Comment $len',
+          'id': 'RepCount $len',
           'likes': []
         })
         .then((value) {})
@@ -252,7 +250,7 @@ class VideoProfileScreen extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text('Something went wrong');
+                    return const Text('Something.....');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -283,7 +281,7 @@ class VideoProfileScreen extends StatelessWidget {
                     child: Container(),
                   );
                 }
-                //Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
                 if (snapshot.hasData) {
                   return Column(
                     children: [
@@ -370,7 +368,9 @@ class VideoProfileScreen extends StatelessWidget {
                                               GestureDetector(
                                                 onTap: () =>
                                                     _showBottomSheetoooo(
-                                                        context, videoID),
+                                                        context,
+                                                        videoID,
+                                                        item.get('id')),
                                                 child: const Text(
                                                   'Trả lời',
                                                   style: const TextStyle(
@@ -410,8 +410,11 @@ class VideoProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-
-                                // comment trả lời...
+                                Column(
+                                  children: [
+                                    Text('Load câu trả lời về ở đây'),
+                                  ],
+                                )
                               ],
                             );
                           },
@@ -493,6 +496,7 @@ class VideoProfileScreen extends StatelessWidget {
           }
           if (snapshot.hasData) {
             final Video item = Video.fromSnap(snapshot.data!.docs[0]);
+
             return SizedBox(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -698,7 +702,8 @@ class VideoProfileScreen extends StatelessWidget {
     );
   }
 
-  void _showBottomSheetoooo(BuildContext context, String videoID) {
+  void _showBottomSheetoooo(
+      BuildContext context, String videoID, String idComment) {
     TextEditingController _textEditingController = TextEditingController();
 
     showModalBottomSheet(
@@ -721,7 +726,7 @@ class VideoProfileScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   String comment = _textEditingController.text;
-                  sendCommentList(comment, videoID);
+                  sendCommentList(comment, videoID, idComment);
                   _textEditingController.clear();
                 },
                 child: Icon(Icons.send),
