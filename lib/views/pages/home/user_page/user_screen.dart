@@ -15,7 +15,7 @@ import 'package:tiktok_app_poly/views/pages/home/user_page/update_password_scree
 import 'package:tiktok_app_poly/views/widgets/text.dart';
 
 import '../../../widgets/colors.dart';
-import '../video_page/video_profile_player_screen.dart';
+import 'video_page/video_profile_player_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key}) : super(key: key);

@@ -53,7 +53,8 @@ class StorageServices {
           .child(currentUid)
           .child(id);
 
-      UploadTask uploadTask = ref.putFile(await compressVideo(videoPath));
+      UploadTask uploadTask = ref.putFile(File(videoPath));
+
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
       return downloadUrl;

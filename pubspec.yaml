@@ -60,6 +60,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   timer_count_down: ^2.2.2
   camera: ^0.10.5+3
+  flutter_local_notifications: ^16.1.0
 
 dev_dependencies:
   flutter_test:

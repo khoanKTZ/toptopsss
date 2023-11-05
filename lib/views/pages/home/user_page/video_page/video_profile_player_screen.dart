@@ -6,22 +6,21 @@ import 'package:intl/intl.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
 
-import '../../../../database/services/storage_services.dart';
-import '../../../../database/services/video_service.dart';
-import '../../../widgets/colors.dart';
-import '../../../widgets/video_player_item.dart';
+import '../../../../../database/services/storage_services.dart';
+import '../../../../../database/services/video_service.dart';
+import '../../../../widgets/colors.dart';
+import '../../../../widgets/video_player_item.dart';
 
 // ignore: must_be_immutable
 class VideoProfileScreen extends StatelessWidget {
   final String videoID;
+
   VideoProfileScreen({Key? key, required this.videoID}) : super(key: key);
   List<String> comments = [];
-
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
-
   buildProfile(String profilePhoto) {
     return SizedBox(
       width: 60,
@@ -229,7 +228,7 @@ class VideoProfileScreen extends StatelessWidget {
         });
   }
 
-  _showBottomSheet(BuildContext context, String videoID) {
+  _showBottomSheetooooooo(BuildContext context, String videoID) {
     final TextEditingController _textEditingController =
         TextEditingController();
     final page2 = SizedBox(
@@ -281,7 +280,6 @@ class VideoProfileScreen extends StatelessWidget {
                     child: Container(),
                   );
                 }
-
                 if (snapshot.hasData) {
                   return Column(
                     children: [
@@ -362,9 +360,8 @@ class VideoProfileScreen extends StatelessWidget {
                                                   color: Colors.black38,
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                  width:
-                                                      8), // Khoảng cách giữa "Trả lời" và thời gian
+                                              const SizedBox(width: 8),
+                                              // Khoảng cách giữa "Trả lời" và thời gian
                                               GestureDetector(
                                                 onTap: () =>
                                                     _showBottomSheetoooo(
@@ -410,10 +407,191 @@ class VideoProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Column(
-                                  children: [
-                                    Text('Load câu trả lời về ở đây'),
-                                  ],
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                      MediaQuery.of(context).size.height / 2,
+                                  margin: EdgeInsets.only(left: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      left: BorderSide(
+                                          color: Colors.grey, width: 2),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: videos
+                                          .doc(videoID)
+                                          .collection('commentList')
+                                          .doc(item['id'])
+                                          .collection('repcomment')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshots) {
+                                        if (snapshots.hasError) {
+                                          return const Text(
+                                              'Something went wrong');
+                                        }
+                                        if (snapshots.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                            child: Container(
+                                              height: 20,
+                                              color: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                        if (snapshots.hasData) {
+                                          return ListView.builder(
+                                            itemCount:
+                                                snapshots.data!.docs.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final items =
+                                                  snapshots.data!.docs[index];
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  '${items['avatarURL']}'),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              '${items['userName']}',
+                                                              style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .black38),
+                                                            ),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  3 /
+                                                                  4,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {},
+                                                                child: Text(
+                                                                  '${items['content']}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'Popins',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  items['createdOn'] ==
+                                                                          null
+                                                                      ? DateTime
+                                                                              .now()
+                                                                          .toString()
+                                                                      : DateFormat
+                                                                              .yMMMd()
+                                                                          .add_jm()
+                                                                          .format(
+                                                                              items['createdOn'].toDate()),
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .black38,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 8),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        // const Spacer(),
+                                                        // Padding(
+                                                        //   padding:
+                                                        //       const EdgeInsets
+                                                        //           .only(
+                                                        //           right: 8.0),
+                                                        //   child: Column(
+                                                        //     children: [
+                                                        //       InkWell(
+                                                        //         onTap: () {
+                                                        //           VideoServices
+                                                        //               .likeComment(
+                                                        //                   videoID,
+                                                        //                   item[
+                                                        //                       'id']);
+                                                        //         },
+                                                        //         child: Icon(
+                                                        //           Icons
+                                                        //               .favorite,
+                                                        //           color: snapshot
+                                                        //                   .data!
+                                                        //                   .docs[
+                                                        //                       index]
+                                                        //                       [
+                                                        //                       'likes']
+                                                        //                   .contains(
+                                                        //                       uid)
+                                                        //               ? Colors
+                                                        //                   .red
+                                                        //               : Colors
+                                                        //                   .grey,
+                                                        //         ),
+                                                        //       ),
+                                                        //       Text(
+                                                        //           '${item['likes'].length}'),
+                                                        //     ],
+                                                        //   ),
+                                                        // ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                        return Container(
+                                          height: 20,
+                                          color: Colors.red,
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 )
                               ],
                             );
@@ -607,7 +785,7 @@ class VideoProfileScreen extends StatelessWidget {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              _showBottomSheet(
+                                              _showBottomSheetooooooo(
                                                   context, item.id);
                                               print('JKhoan nhấp ccc');
                                             },

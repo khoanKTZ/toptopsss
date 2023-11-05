@@ -31,7 +31,7 @@ void _showBottomSheetoooo(BuildContext context, String videoID) {
               onPressed: () {
                 String comment = _textEditingController.text;
                 // Gọi hàm gửi bình luận ở đây
-                sendCommentList(comment, videoID);
+                sendCommentList(comment, videoID, "");
                 _textEditingController.clear(); // Xóa nội dung trong ô nhập
               },
               child: Icon(Icons.send),
@@ -43,7 +43,8 @@ void _showBottomSheetoooo(BuildContext context, String videoID) {
   );
 }
 
-Future<void> sendCommentList(String message, String videoID) async {
+Future<void> sendCommentList(
+    String message, String videoID, String idComment) async {
   if (message == '') return;
   final result = await users.doc(uid).get();
   final String avatarURL = result.get('avartaURL');

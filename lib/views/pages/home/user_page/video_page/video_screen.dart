@@ -8,16 +8,16 @@ import 'package:tiktok_app_poly/database/models/video_model.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
 
-import '../../../../database/services/storage_services.dart';
-import '../../../../database/services/video_service.dart';
-import '../../../widgets/colors.dart';
-import '../../../widgets/video_player_item.dart';
-import '../user_page/people_detail_screen.dart';
+import '../../../../../database/services/storage_services.dart';
+import '../../../../../database/services/video_service.dart';
+import '../../../../widgets/colors.dart';
+import '../../../../widgets/video_player_item.dart';
+import '../people_detail_screen.dart';
 
 // ignore: must_be_immutable
 class VideoScreen extends StatelessWidget {
-  VideoScreen({Key? key}) : super(key: key);
-
+  VideoScreen({Key? key, required this.videoID}) : super(key: key);
+  final String videoID;
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   final CollectionReference users =
@@ -166,10 +166,97 @@ class VideoScreen extends StatelessWidget {
     }).then((value) async {});
   }
 
-  _showBottomSheet(BuildContext context, String videoID) {
+  _deleteComment(BuildContext context, String idexx, String videoID) async {
+    videos.doc(videoID).collection('commentList').doc(idexx).delete();
+    Navigator.pop(context);
+  }
+
+  void _updateComment(String videoID, String commentId, String comment,
+      BuildContext context) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoID)
+          .collection('commentList')
+          .doc(commentId)
+          .update({'content': comment});
+    } on FirebaseException catch (e) {
+      print('khaonnannandandandan' + e.message.toString());
+    }
+  }
+
+  TextEditingController _textEditingController = TextEditingController();
+  Future<void> _showUpdateDialog(
+      BuildContext context, String indexT, String videoID) async {
+    _textEditingController.text = ''; // Đặt giá trị ban đầu cho TextField
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update Comment"),
+          content: TextField(
+            controller: _textEditingController, // Gán controller cho TextField
+            textAlignVertical: TextAlignVertical.bottom,
+            decoration: InputDecoration(hintText: 'Nhập nội dung bình luận'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Lưu'),
+              onPressed: () {
+                String comment = _textEditingController.text;
+                _updateComment(videoID, indexT, comment, context);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showDialog(BuildContext context, String idexx, String videoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _deleteComment(context, idexx, videoId);
+                },
+                child: Text("Delete"),
+              ),
+              TextButton(
+                onPressed: () {
+                  _showUpdateDialog(context, idexx, videoID);
+                  // _showBottomSheet(context, videoID);
+                },
+                child: Text("Update"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng hộp thoại
+                },
+                child: Text("Cancel"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  _showBottomSheetooooooo(BuildContext context, String videoID) {
     final TextEditingController _textEditingController =
         TextEditingController();
-
     final page2 = SizedBox(
       height: MediaQuery.of(context).size.height * 3 / 4,
       child: Column(
@@ -188,14 +275,13 @@ class VideoScreen extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Text('Something went wrong');
+                    return const Text('Something.....');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: Container(),
                     );
                   }
-                  //Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                   if (snapshot.hasData) {
                     return Text(
                       '${snapshot.data!.docs.length} Comments',
@@ -220,7 +306,6 @@ class VideoScreen extends StatelessWidget {
                     child: Container(),
                   );
                 }
-                //Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                 if (snapshot.hasData) {
                   return Column(
                     children: [
@@ -264,24 +349,60 @@ class VideoScreen extends StatelessWidget {
                                                     .width *
                                                 3 /
                                                 4,
-                                            child: Text(
-                                              '${item['content']}',
-                                              style: const TextStyle(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                // Xử lý sự kiện khi chạm vào Text
+                                                String indexite =
+                                                    item.get('id').toString();
+                                                String idCheck =
+                                                    item.get('uID').toString();
+                                                if (uid == idCheck) {
+                                                  _showDialog(context, indexite,
+                                                      videoID);
+                                                }
+                                              },
+                                              child: Text(
+                                                '${item['content']}',
+                                                style: const TextStyle(
                                                   fontSize: 16,
                                                   color: Colors.black,
-                                                  fontFamily: 'Popins'),
+                                                  fontFamily: 'Popins',
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          Text(
-                                            item['createdOn'] == null
-                                                ? DateTime.now().toString()
-                                                : DateFormat.yMMMd()
-                                                    .add_jm()
-                                                    .format(item['createdOn']
-                                                        .toDate()),
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black38),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                item['createdOn'] == null
+                                                    ? DateTime.now().toString()
+                                                    : DateFormat.yMMMd()
+                                                        .add_jm()
+                                                        .format(
+                                                            item['createdOn']
+                                                                .toDate()),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black38,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              // Khoảng cách giữa "Trả lời" và thời gian
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    _showBottomSheetoooo(
+                                                        context,
+                                                        videoID,
+                                                        item.get('id')),
+                                                child: const Text(
+                                                  'Trả lời',
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black38,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -312,6 +433,174 @@ class VideoScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height:
+                                      MediaQuery.of(context).size.height / 2,
+                                  margin: EdgeInsets.only(left: 10),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      left: BorderSide(
+                                          color: Colors.grey, width: 2),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                      stream: videos
+                                          .doc(videoID)
+                                          .collection('commentList')
+                                          .doc(item['id'])
+                                          .collection('repcomment')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshots) {
+                                        if (snapshots.hasError) {
+                                          return const Text(
+                                              'Something went wrong');
+                                        }
+                                        if (snapshots.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                            child: Container(
+                                              height: 20,
+                                              color: Colors.red,
+                                            ),
+                                          );
+                                        }
+                                        if (snapshots.hasData) {
+                                          return ListView.builder(
+                                            itemCount:
+                                                snapshots.data!.docs.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final items =
+                                                  snapshots.data!.docs[index];
+                                              return Column(
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  '${items['avatarURL']}'),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              '${items['userName']}',
+                                                              style: const TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .black38),
+                                                            ),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  3 /
+                                                                  4,
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {},
+                                                                child: Text(
+                                                                  '${items['content']}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'Popins',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  items['createdOn'] ==
+                                                                          null
+                                                                      ? DateTime
+                                                                              .now()
+                                                                          .toString()
+                                                                      : DateFormat
+                                                                              .yMMMd()
+                                                                          .add_jm()
+                                                                          .format(
+                                                                              items['createdOn'].toDate()),
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .black38,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 8),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        // const Spacer(),
+                                                        // Padding(
+                                                        //   padding:
+                                                        //       const EdgeInsets
+                                                        //           .only(
+                                                        //           right: 8.0),
+                                                        //   child: Column(
+                                                        //     children: [
+                                                        //       InkWell(
+                                                        //         onTap: () {},
+                                                        //         child: Icon(
+                                                        //           Icons
+                                                        //               .favorite,
+                                                        //           color: Colors
+                                                        //               .grey,
+                                                        //         ),
+                                                        //       ),
+                                                        //     ],
+                                                        //   ),
+                                                        // ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                        return Container(
+                                          height: 20,
+                                          color: Colors.red,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
                               ],
                             );
                           },
@@ -335,7 +624,7 @@ class VideoScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       width: 2,
-                      color: MyColors.mainColor,
+                      color: MyColors.thirdColor,
                     ),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -347,7 +636,7 @@ class VideoScreen extends StatelessWidget {
                     },
                     icon: Icon(
                       Icons.send_rounded,
-                      color: MyColors.thirdColor,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -565,7 +854,8 @@ class VideoScreen extends StatelessWidget {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            _showBottomSheet(context, item.id);
+                                            _showBottomSheetooooooo(
+                                                context, item.id);
                                           },
                                           child: const Icon(
                                             CupertinoIcons
@@ -606,6 +896,23 @@ class VideoScreen extends StatelessWidget {
                                       children: [
                                         InkWell(
                                           onTap: () {
+                                            print('Đã click');
+                                          },
+                                          child: const Icon(
+                                            Icons.save,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 7,
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
                                             showOptionsDialog(
                                                 context, item.videoUrl);
                                           },
@@ -639,6 +946,80 @@ class VideoScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _showBottomSheetoooo(
+      BuildContext context, String videoID, String idComment) {
+    TextEditingController _textEditingController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Đảm bảo BottomSheet mở rộng tới đáy màn hình
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          height: MediaQuery.of(context).size.height *
+              0.33, // Chiều cao khoảng 1/3 màn hình
+          child: Column(
+            children: [
+              TextField(
+                controller: _textEditingController,
+                decoration: InputDecoration(
+                  hintText: 'Nhập nội dung',
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  String comment = _textEditingController.text;
+                  sendCommentList(comment, videoID, idComment);
+                  _textEditingController.clear();
+                },
+                child: Icon(Icons.send),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> sendCommentList(
+      String message, String videoID, String idComment) async {
+    if (message == '') return;
+
+    final result = await users.doc(uid).get();
+    final String avatarURL = result.get('avartaURL');
+    final String userName = result.get('fullName');
+    int len = 0;
+    var allDocs = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc(idComment)
+        .collection('repcomment')
+        .get();
+    len = allDocs.docs.length;
+    await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc(idComment)
+        .collection('repcomment')
+        .doc('RepCount $len')
+        .set({
+          'createdOn': FieldValue.serverTimestamp(),
+          'uID': uid,
+          'content': message,
+          'avatarURL': avatarURL,
+          'userName': userName,
+          'id': 'RepCount $len',
+          'likes': []
+        })
+        .then((value) {})
+        .catchError((error) {
+          print("Lỗi khi thêm dữ liệu vào repcomment: $error");
+        });
   }
 
   showOptionsDialog(BuildContext context, String url) {

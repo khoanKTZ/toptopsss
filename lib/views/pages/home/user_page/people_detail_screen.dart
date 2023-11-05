@@ -14,7 +14,7 @@ import 'package:tiktok_app_poly/views/widgets/text.dart';
 import '../../../../database/services/chat_services.dart';
 import '../../../widgets/colors.dart';
 import '../camera_page/add_video_screen.dart';
-import '../video_page/video_profile_player_screen.dart';
+import 'video_page/video_profile_player_screen.dart';
 
 class PeopleInfoScreen extends StatefulWidget {
   final String peopleID;

@@ -12,6 +12,7 @@ class CameraScreen extends StatefulWidget {
   @override
   State<CameraScreen> createState() => _CameraScreenState();
 }
+
 class _CameraScreenState extends State<CameraScreen> {
   late List<CameraDescription> cameras;
   CameraController? cameraController;
@@ -24,6 +25,7 @@ class _CameraScreenState extends State<CameraScreen> {
     startCamera(cameraDirection);
     super.initState();
   }
+
   void startCamera(int direction) async {
     cameras = await availableCameras();
 
@@ -38,11 +40,13 @@ class _CameraScreenState extends State<CameraScreen> {
       setState(() {});
     });
   }
+
   @override
   void dispose() {
     cameraController!.dispose();
     super.dispose();
   }
+
   pickVideo(ImageSource src, BuildContext context) async {
     try {
       final video = await ImagePicker().pickVideo(source: src);
@@ -60,6 +64,7 @@ class _CameraScreenState extends State<CameraScreen> {
       throw Exception(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     if (cameraController?.value.isInitialized ?? false) {
@@ -85,12 +90,15 @@ class _CameraScreenState extends State<CameraScreen> {
               )),
               Container(
                 color: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
                 width: MediaQuery.of(context).size.width,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(width: 40,),
+                    const SizedBox(
+                      width: 40,
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -116,10 +124,9 @@ class _CameraScreenState extends State<CameraScreen> {
                             size: 40,
                             shadows: const [
                               Shadow(
-                                color: Colors.black,
-                                offset: Offset(4,4),
-                                blurRadius: 4
-                              )
+                                  color: Colors.black,
+                                  offset: Offset(4, 4),
+                                  blurRadius: 4)
                             ],
                           ),
                         ),
@@ -183,7 +190,11 @@ class _CameraScreenState extends State<CameraScreen> {
                             onTap: () {
                               pickVideo(ImageSource.gallery, context);
                             },
-                            child: const Icon(Icons.photo, color: Colors.white, size: 40,)))
+                            child: const Icon(
+                              Icons.photo,
+                              color: Colors.white,
+                              size: 40,
+                            )))
                   ],
                 ),
               )

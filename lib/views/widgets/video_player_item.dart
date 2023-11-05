@@ -21,7 +21,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
         _isPlaying = true;
         videoPlayerController.setVolume(1);
         videoPlayerController.setLooping(true);
-        videoPlayerController.pause();
+        videoPlayerController.play();
       });
     super.initState();
   }
@@ -62,7 +62,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
                 : const Center(
                     child: Icon(
                       Icons.play_arrow,
-                      color: Colors.white54,
+                      color: Color.fromARGB(136, 255, 255, 255),
                       size: 60,
                     ),
                   ),

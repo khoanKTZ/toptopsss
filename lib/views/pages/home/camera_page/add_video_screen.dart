@@ -37,7 +37,7 @@ class AddVideoScreen extends StatelessWidget {
                 children: [
                   const CircularProgressIndicator(),
                   CustomText(
-                    text: "Pushing Video ....",
+                    text: "UpLoad Video....Please",
                     fontsize: 25,
                     alignment: Alignment.center,
                   ),
@@ -69,7 +69,7 @@ class AddVideoScreen extends StatelessWidget {
                             width: MediaQuery.of(context).size.width - 20,
                             child: CustomTextFormField(
                               controller: _songController,
-                              text: 'Song Name',
+                              text: 'Name music',
                               hint: '',
                               validator: (value) {
                                 return null;
@@ -85,7 +85,7 @@ class AddVideoScreen extends StatelessWidget {
                             width: MediaQuery.of(context).size.width - 20,
                             child: CustomTextFormField(
                               controller: _captionController,
-                              text: 'Caption',
+                              text: 'Cap',
                               hint: '',
                               validator: (value) {
                                 return null;
@@ -134,7 +134,7 @@ class AddVideoScreen extends StatelessWidget {
                                       _captionController.text,
                                       videoPath);
                                 },
-                                child: const Text('Share'),
+                                child: const Text('UpLoad'),
                               ),
                             ],
                           ),

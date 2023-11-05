@@ -9,6 +9,8 @@ import 'package:tiktok_app_poly/provider/save_model.dart';
 import 'package:tiktok_app_poly/views/pages/auth/auth_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
 
+// import 'package:tiktok_app_poly/views/pages/home/user_page/video_page/load.dart';
+
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
             bodyMedium: const TextStyle(fontFamily: "Tiktok_Sans"),
             bodyLarge: const TextStyle(fontFamily: "Tiktok_Sans")),
       ),
-      home: const LoginAll(),
+      home: LoginAll(),
     );
   }
 }
