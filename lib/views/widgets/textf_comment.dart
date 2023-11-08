@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tiktok_app_poly/database/services/comment_service.dart';
+import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/views/widgets/colors.dart';
-import 'package:path_provider/path_provider.dart';
 
 class TextFComment extends StatelessWidget {
   TextFComment(
@@ -40,7 +39,7 @@ class TextFComment extends StatelessWidget {
                 onPressed: () {
                   value.checkComment(check);
                   if (value.isSend) {
-                    CommentService.sendComment(
+                    VideoServices.sendComment(
                         context: context,
                         message: controller.text,
                         uid: uid,
@@ -48,7 +47,7 @@ class TextFComment extends StatelessWidget {
                     controller.clear();
                   }
                   if (value.isRepCM) {
-                    CommentService.RepComment(
+                    VideoServices.RepComment(
                         message: controller.text,
                         uid: uid,
                         videoID: videoID,

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:tiktok_app_poly/database/services/comment_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/rep_comment_show.dart';
 import 'package:intl/intl.dart';
@@ -26,7 +25,7 @@ class CommentItem extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 onPressed: () {
-                  CommentService.delete(videoID: videoID, idexx: idexx);
+                  VideoServices.delete(videoID: videoID, idexx: idexx);
                   Navigator.pop(context);
                 },
                 child: Text("Delete"),
@@ -77,7 +76,7 @@ class CommentItem extends StatelessWidget {
               child: Text('Lưu'),
               onPressed: () {
                 String comment = _textEditingControllerup.text;
-                CommentService.update(
+                VideoServices.update(
                     videoID: videoID, commentId: indexT, comment: comment);
                 print(indexT);
                 Navigator.of(context).pop();
@@ -199,7 +198,7 @@ class CommentItem extends StatelessWidget {
                                                 if (uid == idCheck) {
                                                   _showDialog(
                                                     context,
-                                                    indexite,
+                                                    indexite
                                                   );
                                                 }
                                               },
