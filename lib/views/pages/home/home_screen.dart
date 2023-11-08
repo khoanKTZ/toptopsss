@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/views/pages/home/Notification/notifi.dart';
 import 'package:tiktok_app_poly/views/pages/home/chat_page/chat_screen.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/user_screen.dart';
-import 'package:tiktok_app_poly/views/pages/home/user_page/video_page/video_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/video_page_home/video_screen.dart';
 
 import 'custom_bottom_bar.dart';
 
@@ -16,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var _tabIndex = 0;
   final List<Widget> _list = [
-    VideoScreen(videoID: ''),
+    VideoScreen(),
     ChatScreen(),
     const Notification_Screen(),
     const UserInfoScreen(),

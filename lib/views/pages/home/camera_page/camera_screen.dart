@@ -36,7 +36,6 @@ class _CameraScreenState extends State<CameraScreen> {
       if (!mounted) {
         return;
       }
-
       setState(() {});
     });
   }

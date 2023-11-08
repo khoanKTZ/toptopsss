@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
+import 'package:tiktok_app_poly/views/pages/comment_widgets/show_comment.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
 
 import '../../../../../database/services/storage_services.dart';
 import '../../../../../database/services/video_service.dart';
-import '../../../../widgets/colors.dart';
 import '../../../../widgets/video_player_item.dart';
 
 // ignore: must_be_immutable
@@ -115,34 +114,8 @@ class VideoProfileScreen extends StatelessWidget {
   }
 
   // xoá connent
-  _deleteComment(BuildContext context, String commentId, String videoID) async {
-    final commentReference = FirebaseFirestore.instance
-        .collection('videos')
-        .doc(videoID)
-        .collection('commentList')
-        .doc(commentId);
-
-    final commentSnapshot = await commentReference.get();
-
-    if (commentSnapshot.exists) {
-      final repComments =
-          commentSnapshot.data()?['repcomment'] as List<String>?;
-      if (repComments != null && repComments.isNotEmpty) {
-        for (final repCommentId in repComments) {
-          final repCommentReference = FirebaseFirestore.instance
-              .collection('videos')
-              .doc(videoID)
-              .collection('commentList')
-              .doc(repCommentId);
-          try {
-            await repCommentReference.delete();
-          } catch (e) {
-            break;
-          }
-        }
-      }
-      await commentReference.delete();
-    }
+  _deleteComment(BuildContext context, String idexx, String videoID) async {
+    videos.doc(videoID).collection('commentList').doc(idexx).delete();
     Navigator.pop(context);
   }
 
@@ -675,7 +648,7 @@ class VideoProfileScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       context: context,
       builder: (context) {
-        return page2;
+        return CommentItem(videoID: videoID, uid: uid);
       },
     );
   }
@@ -700,7 +673,6 @@ class VideoProfileScreen extends StatelessWidget {
           }
           if (snapshot.hasData) {
             final Video item = Video.fromSnap(snapshot.data!.docs[0]);
-
             return SizedBox(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -711,6 +683,7 @@ class VideoProfileScreen extends StatelessWidget {
                   child: Stack(
                     children: [
                       VideoPlayerItem(
+                        context: context,
                         videoUrl: item.videoUrl,
                       ),
                       Column(
@@ -811,9 +784,9 @@ class VideoProfileScreen extends StatelessWidget {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              _showBottomSheetooooooo(
-                                                  context, item.id);
-                                              print('JKhoan nhấp ccc');
+                                              _showBottomSheet(
+                                                  context, item.id, uid!);
+                                              print('Mở tab comment');
                                             },
                                             child: const Icon(
                                               CupertinoIcons
@@ -837,7 +810,6 @@ class VideoProfileScreen extends StatelessWidget {
                                                 return const Text(
                                                     'Something went wrong');
                                               }
-
                                               if (snapshot.hasData) {
                                                 return Text(
                                                   '${snapshot.data!.docs.length}',
@@ -903,42 +875,6 @@ class VideoProfileScreen extends StatelessWidget {
           return Container();
         },
       ),
-    );
-  }
-
-  void _showBottomSheetoooo(
-      BuildContext context, String videoID, String idComment) {
-    TextEditingController _textEditingController = TextEditingController();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Đảm bảo BottomSheet mở rộng tới đáy màn hình
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-          height: MediaQuery.of(context).size.height *
-              0.33, // Chiều cao khoảng 1/3 màn hình
-          child: Column(
-            children: [
-              TextField(
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                  hintText: 'Nhập nội dung',
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  String comment = _textEditingController.text;
-                  sendCommentList(comment, videoID, idComment);
-                  _textEditingController.clear();
-                },
-                child: Icon(Icons.send),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 
