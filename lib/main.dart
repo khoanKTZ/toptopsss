@@ -2,15 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/provider/gender_model.dart';
 import 'package:tiktok_app_poly/provider/loading_model.dart';
 import 'package:tiktok_app_poly/provider/login_phone.dart';
 import 'package:tiktok_app_poly/provider/save_model.dart';
 import 'package:tiktok_app_poly/views/pages/auth/auth_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
-
-// import 'package:tiktok_app_poly/views/pages/home/user_page/video_page/load.dart';
-
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -23,6 +21,9 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(
           create: (context) => GenderModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cmodel(),
         ),
         ChangeNotifierProvider(
           create: (context) => LoadingModel(),

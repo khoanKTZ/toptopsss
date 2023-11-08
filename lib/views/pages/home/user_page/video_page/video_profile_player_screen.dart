@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
+import 'package:tiktok_app_poly/views/pages/comment_widgets/show_comment.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
-import 'package:tiktok_app_poly/views/widgets/comment_widgets/show_comment.dart';
 import '../../../../../database/services/storage_services.dart';
 import '../../../../../database/services/video_service.dart';
 import '../../../../widgets/video_player_item.dart';
@@ -75,7 +75,9 @@ class VideoProfileScreen extends StatelessWidget {
       ),
     );
   }
-  _showBottomSheetooooooo(BuildContext context, String videoID,String uid) {
+
+
+  _showBottomSheet(BuildContext context, String videoID,String uid) {
     //_scaffoldKey.currentState.showBottomSheet((context) => null);
     showModalBottomSheet<void>(
       shape: const RoundedRectangleBorder(
@@ -120,7 +122,7 @@ class VideoProfileScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Stack(
                     children: [
-                      VideoPlayerItem(
+                      VideoPlayerItem(context: context,
                         videoUrl: item.videoUrl,
                       ),
                       Column(
@@ -221,9 +223,9 @@ class VideoProfileScreen extends StatelessWidget {
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              _showBottomSheetooooooo(
+                                              _showBottomSheet(
                                                   context, item.id, uid!);
-                                              print('JKhoan nhấp ccc');
+                                              print('Mở tab comment');
                                             },
                                             child: const Icon(
                                               CupertinoIcons
@@ -247,7 +249,6 @@ class VideoProfileScreen extends StatelessWidget {
                                                 return const Text(
                                                     'Something went wrong');
                                               }
-
                                               if (snapshot.hasData) {
                                                 return Text(
                                                   '${snapshot.data!.docs.length}',

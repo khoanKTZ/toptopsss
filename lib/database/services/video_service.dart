@@ -46,5 +46,38 @@ class VideoServices {
     }
   }
 
+  static likeReComment(String videoID, String commentId,String repID) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc(commentId).collection('repcomment')
+        .doc(repID)
+        .get();
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    if ((doc.data()! as dynamic)['likes'].contains(uid)) {
+      await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoID)
+          .collection('commentList')
+          .doc(commentId)
+          .collection('repcomment')
+          .doc(repID)
+          .update({
+        'likes': FieldValue.arrayRemove([uid]),
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoID)
+          .collection('commentList')
+          .doc(commentId)
+          .collection('repcomment')
+          .doc(repID)
+          .update({'likes': FieldValue.arrayUnion([uid]),
+      });
+    }
+  }
+
   static checkLike(String id) {}
 }

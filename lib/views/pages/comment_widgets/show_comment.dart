@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/comment_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
-import 'package:tiktok_app_poly/views/widgets/colors.dart';
-import 'package:tiktok_app_poly/views/widgets/comment_widgets/rep_comment_show.dart';
+import 'package:tiktok_app_poly/views/pages/comment_widgets/rep_comment_show.dart';
 import 'package:intl/intl.dart';
+import 'package:tiktok_app_poly/views/widgets/textf_comment.dart';
 
 class CommentItem extends StatelessWidget {
-  CommentItem({Key?key,required this.videoID,required this.uid}): super(key: key);
+  CommentItem({Key? key, required this.videoID, required this.uid})
+      : super(key: key);
   final String videoID;
   final String uid;
 
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
+  TextEditingController _textEditingControllerup =
+  TextEditingController(); // Khai báo ở cấp độ lớp
 
   _showDialog(BuildContext context, String idexx) {
     showDialog(
@@ -48,19 +51,17 @@ class CommentItem extends StatelessWidget {
     );
   }
 
-  TextEditingController _textEditingController =
-  TextEditingController(); // Khai báo ở cấp độ lớp
 
   Future<void> _showUpdateDialog(
       BuildContext context, String indexT, String videoID) async {
-    _textEditingController.text = ''; // Đặt giá trị ban đầu cho TextField
+    _textEditingControllerup.text = ''; // Đặt giá trị ban đầu cho TextField
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Cập nhật bình luận"),
           content: TextField(
-            controller: _textEditingController, // Gán controller cho TextField
+            controller: _textEditingControllerup, // Gán controller cho TextField
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(hintText: 'Nhập nội dung bình luận'),
           ),
@@ -69,14 +70,17 @@ class CommentItem extends StatelessWidget {
               child: Text('Hủy'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text('Lưu'),
               onPressed: () {
-                String comment = _textEditingController.text;
-                CommentService.update(videoID: videoID, commentId: indexT, comment: comment);
+                String comment = _textEditingControllerup.text;
+                CommentService.update(
+                    videoID: videoID, commentId: indexT, comment: comment);
                 print(indexT);
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             ),
@@ -86,37 +90,12 @@ class CommentItem extends StatelessWidget {
     );
   }
 
-  void _showBottomSheetoooo(
+  void _showRepCM(
       BuildContext context, String videoID, String idComment) {
-    TextEditingController _textEditingControllerup = TextEditingController();
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Đảm bảo BottomSheet mở rộng tới đáy màn hình
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-          height: MediaQuery.of(context).size.height *
-              0.33, // Chiều cao khoảng 1/3 màn hình
-          child: Column(
-            children: [
-              TextField(
-                controller: _textEditingControllerup,
-                decoration: InputDecoration(
-                  hintText: 'Nhập nội dung',
-                ),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  String comment = _textEditingControllerup.text;
-                  CommentService.RepComment(context: context,message: comment, uid: uid, videoID: videoID, idComment: idComment);
-                  _textEditingController.clear();
-                },
-                child: Icon(Icons.send),
-              ),
-            ],
-          ),
-        );
+        return TextFComment(check: 'rep', videoID: videoID, uid: uid, commentID: idComment);
       },
     );
   }
@@ -166,11 +145,6 @@ class CommentItem extends StatelessWidget {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: Container(),
-                  );
                 }
                 if (snapshot.hasData) {
                   return Column(
@@ -223,7 +197,10 @@ class CommentItem extends StatelessWidget {
                                                 String idCheck =
                                                 item.get('uID').toString();
                                                 if (uid == idCheck) {
-                                                  _showDialog(context, indexite,);
+                                                  _showDialog(
+                                                    context,
+                                                    indexite,
+                                                  );
                                                 }
                                               },
                                               child: Text(
@@ -255,7 +232,7 @@ class CommentItem extends StatelessWidget {
                                               // Khoảng cách giữa "Trả lời" và thời gian
                                               GestureDetector(
                                                 onTap: () =>
-                                                    _showBottomSheetoooo(
+                                                    _showRepCM(
                                                         context,
                                                         videoID,
                                                         item.get('id')),
@@ -298,8 +275,7 @@ class CommentItem extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                // RepCM(context, item['id'])
-                                RepCMW(videoID: videoID, itemID: item['id'])
+                                RepCMW(videoID: videoID, itemID: item['id'],uid: uid,)
                               ],
                             );
                           },
@@ -312,36 +288,7 @@ class CommentItem extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 40,
-              child: TextField(
-                controller: _textEditingController,
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 2,
-                      color: MyColors.thirdColor,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  hintText: "Comment here ...",
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      CommentService.sendComment(context: context, message: _textEditingController.text, uid: uid, videoID: videoID);
-                      _textEditingController.text = '';
-                    },
-                    icon: Icon(
-                      Icons.send_rounded,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          TextFComment(check: 'send', videoID: videoID, uid: uid,commentID: '',)
         ],
       ),
     );

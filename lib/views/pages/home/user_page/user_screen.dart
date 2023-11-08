@@ -29,12 +29,9 @@ class _UserInfoScreenState extends State<UserInfoScreen>
   late TabController _tabController;
   String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-  // File? imageFile;
-
   @override
   void initState() {
     super.initState();
-    // print('Current UserID:${FirebaseAuth.instance.currentUser?.uid}');
     _tabController = TabController(length: 2, vsync: this);
   }
 
