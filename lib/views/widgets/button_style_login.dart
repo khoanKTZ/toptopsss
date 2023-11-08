@@ -1,36 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/provider/SignInGoogle_provider.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/home_screen.dart';
 
-// ignore: must_be_immutable
-class BottomStyleLogin extends StatelessWidget {
-  BottomStyleLogin(
-      {Key? key,
-      required this.nameButton,
-      required this.checkButton,
-      required this.icons})
-      : super(key: key);
-  String nameButton;
-  bool checkButton;
-  String icons;
+class BottomStyleLogin extends StatefulWidget {
+  final String nameButton;
+  final bool checkButton;
+  final String icons;
+
+  BottomStyleLogin({
+    Key? key,
+    required this.nameButton,
+    required this.checkButton,
+    required this.icons,
+  }) : super(key: key);
+
+  @override
+  _BottomStyleLoginState createState() => _BottomStyleLoginState();
+}
+
+class _BottomStyleLoginState extends State<BottomStyleLogin> {
+  final SignInGooogleProvider signInGoogleProvider = SignInGooogleProvider();
+
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    await signInGoogleProvider.signInWithGoogle();
+
+    if (signInGoogleProvider.user != null && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Xử lý khi đăng nhập thất bại
+    }
+  }
 
   void checkcode(BuildContext context) {
-    if (checkButton == false) {
+    if (widget.checkButton == false) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ứng dụng đang được phát triển.')));
     } else {
-      if (nameButton == "User email/ username") {
+      if (widget.nameButton == "User email/ username") {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
       }
 
-      if (nameButton == "User Login phone") {
+      if (widget.nameButton == "User Login phone") {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => LoginWithPhoneNumber()));
+      }
+
+      if (widget.nameButton == "Continue with Google") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
+        _signInWithGoogle(context);
       }
     }
   }
@@ -49,13 +77,13 @@ class BottomStyleLogin extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-              'assets/icons/$icons',
+              'assets/icons/${widget.icons}',
               width: 25,
               height: 25,
             ),
             Expanded(
               child: Text(
-                nameButton,
+                widget.nameButton,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,

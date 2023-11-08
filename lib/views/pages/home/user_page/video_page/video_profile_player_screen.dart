@@ -115,8 +115,34 @@ class VideoProfileScreen extends StatelessWidget {
   }
 
   // xoá connent
-  _deleteComment(BuildContext context, String idexx, String videoID) async {
-    videos.doc(videoID).collection('commentList').doc(idexx).delete();
+  _deleteComment(BuildContext context, String commentId, String videoID) async {
+    final commentReference = FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .collection('commentList')
+        .doc(commentId);
+
+    final commentSnapshot = await commentReference.get();
+
+    if (commentSnapshot.exists) {
+      final repComments =
+          commentSnapshot.data()?['repcomment'] as List<String>?;
+      if (repComments != null && repComments.isNotEmpty) {
+        for (final repCommentId in repComments) {
+          final repCommentReference = FirebaseFirestore.instance
+              .collection('videos')
+              .doc(videoID)
+              .collection('commentList')
+              .doc(repCommentId);
+          try {
+            await repCommentReference.delete();
+          } catch (e) {
+            break;
+          }
+        }
+      }
+      await commentReference.delete();
+    }
     Navigator.pop(context);
   }
 

@@ -42,11 +42,10 @@ class UserService {
             'email': email,
             'following': [],
             'follower': [],
-            'avartaURL':
-                'https://iotcdn.oss-ap-southeast-1.aliyuncs.com/RpN655D.png',
-            'phone': 'None',
-            'age': 'None',
-            'gender': 'None',
+            'avartaURL': '',
+            'phone': '',
+            'age': '',
+            'gender': '',
           })
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
