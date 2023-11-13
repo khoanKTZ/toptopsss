@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/auth_service.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/update_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -84,11 +85,23 @@ class _LoginScreenState extends State<LoginScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Column(
         children: [
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Email",
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black, // Màu đường viền
+                width: 0.5, // Độ dày của đường viền
+              ),
+              borderRadius: BorderRadius.circular(15.0), // Độ cong của góc
+            ),
+            child: TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "Email....",
+                border: InputBorder
+                    .none, // Để loại bỏ đường viền mặc định của TextField
+              ),
             ),
           ),
           if (emailErrorText != null)
@@ -97,30 +110,63 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(color: Colors.red),
             ),
           const SizedBox(height: 20),
-          TextField(
-            controller: passwordController,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Password",
-              suffixIcon: IconButton(
-                icon: Icon(
-                  showPassword ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  setState(() {
-                    showPassword = !showPassword;
-                  });
-                },
+          Container(
+            height: 50.0, // Điều chỉnh chiều cao của Container
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 0.5,
               ),
+              borderRadius: BorderRadius.circular(15.0),
             ),
-            obscureText: !showPassword,
+            child: TextField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "Password....",
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    showPassword ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                ),
+              ),
+              obscureText: !showPassword,
+            ),
           ),
           if (passwordErrorText != null)
             Text(
               passwordErrorText!,
               style: TextStyle(color: Colors.red),
             ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Container(
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UpdatePasswordScreen()));
+                    },
+                    child: Text(
+                      'Forgot your password?',
+                      style: TextStyle(
+                          color: const Color.fromARGB(255, 19, 19, 19)),
+                    )),
+              ),
+            ],
+          ),
           Container(
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(top: 15),
@@ -134,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Padding(
                 padding: EdgeInsets.all(15.0),
                 child: Text(
-                  "Confirm",
+                  "Login",
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
