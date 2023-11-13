@@ -17,7 +17,7 @@ class CommentItem extends StatelessWidget {
   TextEditingController _textEditingControllerup =
   TextEditingController(); // Khai báo ở cấp độ lớp
 
-  _showDialog(BuildContext context, String idexx) {
+  _showDialog(BuildContext context, String idexx,String value) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -35,7 +35,7 @@ class CommentItem extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   print('đã click');
-                  _showUpdateDialog(context, idexx, videoID);
+                  _showUpdateDialog(context, idexx, videoID,value);
                 },
                 child: Text("Update"),
               ),
@@ -53,39 +53,17 @@ class CommentItem extends StatelessWidget {
   }
 
   Future<void> _showUpdateDialog(BuildContext context, String indexT,
-      String videoID) async {
+      String videoID,String value) async {
     _textEditingControllerup.text = ''; // Đặt giá trị ban đầu cho TextField
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Cập nhật bình luận"),
-          content: TextField(
-            controller:
-            _textEditingControllerup, // Gán controller cho TextField
-            textAlignVertical: TextAlignVertical.bottom,
-            decoration: InputDecoration(hintText: 'Nhập nội dung bình luận'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Hủy'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Lưu'),
-              onPressed: () {
-                String comment = _textEditingControllerup.text;
-                VideoServices.update(
-                    videoID: videoID, commentId: indexT, comment: comment);
-                print(indexT);
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+            title: Text("Cập nhật bình luận"),
+            content: SizedBox(
+              height: 100,
+                width: 300,
+                child: TextFComment(check: 'update', videoID: videoID, uid: uid, commentID: indexT,vauleUp: value,))
         );
       },
     );
@@ -96,13 +74,12 @@ class CommentItem extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return SizedBox(
-
           height: MediaQuery
               .of(context)
               .size
               .height * 2 / 5 + 50,
           child: TextFComment(
-              check: 'rep', videoID: videoID, uid: uid, commentID: idComment),
+              check: 'rep', videoID: videoID, uid: uid, commentID: idComment,vauleUp: ''),
         );
       },
     );
@@ -222,7 +199,7 @@ class CommentItem extends StatelessWidget {
                                                       .toString();
                                                   if (uid == idCheck) {
                                                     _showDialog(
-                                                        context, indexite);
+                                                        context, indexite,item['content']);
                                                   }
                                                 },
                                                 child: Text(
@@ -321,6 +298,7 @@ class CommentItem extends StatelessWidget {
                 videoID: videoID,
                 uid: uid,
                 commentID: '',
+                vauleUp: '',
               ),
             )
           ],

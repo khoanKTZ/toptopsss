@@ -5,15 +5,17 @@ import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/views/widgets/colors.dart';
 
 class TextFComment extends StatefulWidget {
-  const   TextFComment({
+  const TextFComment({
     Key? key,
     required this.check,
     required this.videoID,
     required this.uid,
     required this.commentID,
+    required this.vauleUp,
   }) : super(key: key);
   final String check;
-  final String uid, videoID, commentID;
+  final String uid, videoID, commentID,vauleUp;
+
   @override
   _TextFCommentState createState() => _TextFCommentState();
 }
@@ -24,6 +26,10 @@ class _TextFCommentState extends State<TextFComment> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Cmodel>(builder: (context, value, child) {
+      value.checkComment(widget.check);
+      if(value.isUp){
+        controller.text = widget.vauleUp;
+      }
       return Column(
         children: [
           Padding(
@@ -44,7 +50,6 @@ class _TextFCommentState extends State<TextFComment> {
                   hintText: "Comment here ...",
                   suffixIcon: IconButton(
                     onPressed: () {
-                      value.checkComment(widget.check);
                       if (value.isSend) {
                         VideoServices.sendComment(
                           context: context,
@@ -52,7 +57,7 @@ class _TextFCommentState extends State<TextFComment> {
                           uid: widget.uid,
                           videoID: widget.videoID,
                         );
-                        controller.text = "" ;
+                        controller.text = "";
                       }
                       if (value.isRepCM) {
                         VideoServices.RepComment(
@@ -61,7 +66,15 @@ class _TextFCommentState extends State<TextFComment> {
                           videoID: widget.videoID,
                           idComment: widget.commentID,
                         );
-                        controller.text = "" ;
+                        controller.text = "";
+                        Navigator.of(context).pop();
+                      }
+                      if (value.isUp) {
+                        VideoServices.update(
+                            videoID: widget.videoID,
+                            commentId: widget.commentID,
+                            comment: controller.text);
+                        Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       }
                     },

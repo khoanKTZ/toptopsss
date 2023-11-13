@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Cmodel extends ChangeNotifier {
   bool isShowCM;
+  bool isUp;
   bool isShowRepCM;
   bool isCountCM,isRepCM,isSend;
 
@@ -10,6 +11,7 @@ class Cmodel extends ChangeNotifier {
     this.isCountCM = false,
     this.isRepCM = false,
     this.isSend = false,
+    this.isUp = false,
   this.isShowRepCM = false});
 
   changeShowRepCM(){
@@ -32,6 +34,12 @@ class Cmodel extends ChangeNotifier {
       isSend = true;
     }else{
       isSend = false;
+    }
+
+    if(a== "update"){
+      isUp = true;
+    }else{
+      isUp = false;
     }
   }
 
