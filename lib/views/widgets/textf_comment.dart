@@ -62,7 +62,7 @@ class _TextFCommentState extends State<TextFComment> {
                           idComment: widget.commentID,
                         );
                         controller.text = "" ;
-                        Navigator.pop(context);
+                        Navigator.of(context).pop();
                       }
                     },
                     icon: const Icon(
