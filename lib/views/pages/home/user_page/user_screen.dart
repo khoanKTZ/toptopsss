@@ -11,6 +11,8 @@ import 'package:tiktok_app_poly/database/services/storage_services.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/provider/loading_model.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/EditProfile.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/fllower/follower_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/fllower/following_screen.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/update_password_screen.dart';
 import 'package:tiktok_app_poly/views/widgets/text.dart';
 
@@ -265,20 +267,36 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                   children: [
                     Column(
                       children: [
-                        Text(
-                          snapshot.data.get('following').length.toString(),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
-                              color: Colors.black),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          "Đang follow",
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade700),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Following_Screen(peopleID: '')));
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                snapshot.data
+                                    .get('following')
+                                    .length
+                                    .toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                    color: Colors.black),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                "Đang follow",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey.shade700),
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),
@@ -287,21 +305,36 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                     ),
                     Column(
                       children: [
-                        Text(
-                          snapshot.data.get('follower').length.toString(),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
-                              color: Colors.black),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          "Follower",
-                          style: TextStyle(
-                              fontSize: 14, color: Colors.grey.shade700),
-                        )
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Follower_Screen()));
+                            },
+                            child: Column(
+                              children: [
+                                Text(
+                                  snapshot.data
+                                      .get('follower')
+                                      .length
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  "Follower",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey.shade700),
+                                )
+                              ],
+                            )),
                       ],
                     ),
                   ],

@@ -27,11 +27,6 @@ class AuthService {
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
           (route) => false);
-      getSnackBar(
-        'Login',
-        'Login Success.',
-        Colors.green,
-      ).show(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         getSnackBar(

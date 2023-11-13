@@ -7,8 +7,11 @@ import 'package:tiktok_app_poly/provider/gender_model.dart';
 import 'package:tiktok_app_poly/provider/loading_model.dart';
 import 'package:tiktok_app_poly/provider/login_phone.dart';
 import 'package:tiktok_app_poly/provider/save_model.dart';
+import 'package:tiktok_app_poly/provider/search_model.dart';
 import 'package:tiktok_app_poly/views/pages/auth/auth_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/shearch/shearch_video_screen.dart';
+
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -34,7 +37,11 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (context) => LoginPhoneProvider(),
           child: LoginWithPhoneNumber(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VideoProvider(),
+          child: ShearchVideo(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -55,6 +62,7 @@ class MyApp extends StatelessWidget {
             bodyLarge: const TextStyle(fontFamily: "Tiktok_Sans")),
       ),
       home: LoginAll(),
+      // home: const ShearchVideo(),
     );
   }
 }

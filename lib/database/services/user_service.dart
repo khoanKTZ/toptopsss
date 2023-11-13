@@ -52,8 +52,6 @@ class UserService {
     } catch (e) {}
   }
 
-  //Edit userInfo in firestore cloud
-  //Edit userInfo in firestore cloud
   static editUserFetch({
     required BuildContext context,
     required String collums,

@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/auth_service.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _loginFormKey = GlobalKey<FormState>();
+  bool showPassword = false;
+  String? emailErrorText;
+  String? passwordErrorText;
 
   bool isValidEmail(String email) {
     return RegExp(
@@ -13,30 +22,46 @@ class LoginScreen extends StatelessWidget {
         .hasMatch(email);
   }
 
-  String? validateEmail(String value) {
-    if (value == '') {
-      return "Empty Field !";
-    } else if (!isValidEmail(value)) {
-      return "Wrong Email !";
-    } else {
-      return null;
-    }
-  }
-
   doLogin(BuildContext context) {
-    if (validate()) {
+    setState(() {
+      emailErrorText = validateEmail();
+      passwordErrorText = validatePassword();
+    });
+
+    if (emailErrorText == null && passwordErrorText == null) {
       AuthService.loginFetch(
-          context: context,
-          email: emailController.text,
-          password: passwordController.text);
+        context: context,
+        email: emailController.text,
+        password: passwordController.text,
+      );
     }
   }
 
-  bool validate() {
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      return true;
+  String? validateEmail() {
+    if (emailController.text.isEmpty) {
+      return "Email is required!!";
+    } else if (!isValidEmail(emailController.text)) {
+      return "Invalid email format!";
     }
-    return false;
+    return null;
+  }
+
+  String? validatePassword() {
+    if (passwordController.text.isEmpty) {
+      return "Password is required!";
+    }
+    return null;
+  }
+
+  String? validate() {
+    if (emailController.text.isEmpty) {
+      return "Email is required!!";
+    } else if (passwordController.text.isEmpty) {
+      return "Password is required!";
+    } else if (!isValidEmail(emailController.text)) {
+      return "Invalid email format!";
+    }
+    return null;
   }
 
   @override
@@ -66,15 +91,36 @@ class LoginScreen extends StatelessWidget {
               hintText: "Email",
             ),
           ),
+          if (emailErrorText != null)
+            Text(
+              emailErrorText!,
+              style: TextStyle(color: Colors.red),
+            ),
           const SizedBox(height: 20),
           TextField(
             controller: passwordController,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(vertical: 15.0),
               hintText: "Password",
+              suffixIcon: IconButton(
+                icon: Icon(
+                  showPassword ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(() {
+                    showPassword = !showPassword;
+                  });
+                },
+              ),
             ),
-            obscureText: true,
+            obscureText: !showPassword,
           ),
+          if (passwordErrorText != null)
+            Text(
+              passwordErrorText!,
+              style: TextStyle(color: Colors.red),
+            ),
           Container(
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.only(top: 15),
@@ -83,17 +129,17 @@ class LoginScreen extends StatelessWidget {
                 doLogin(context);
               },
               style: ElevatedButton.styleFrom(
-                // Màu nền của nút
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Colors.pink,
               ),
               child: const Padding(
                 padding: EdgeInsets.all(15.0),
                 child: Text(
                   "Confirm",
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

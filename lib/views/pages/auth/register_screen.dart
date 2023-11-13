@@ -96,7 +96,7 @@ class RegisterScreen extends StatelessWidget {
                   doRegister(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: Colors.pink,
                 ),
                 child: const Text("Confirm"),
               ),

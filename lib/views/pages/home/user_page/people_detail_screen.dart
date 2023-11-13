@@ -30,8 +30,6 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
   late TabController _tabController;
   String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-  // File? imageFile;
-
   @override
   void initState() {
     super.initState();
@@ -111,7 +109,7 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                       Center(
                         child: CustomText(
                           fontsize: 20,
-                          text: '${snapshot.data.get('fullName')}',
+                          text: '@${snapshot.data.get('fullName')}',
                           color: Colors.black,
                         ),
                       ),
@@ -190,8 +188,8 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                     children: [
                       Column(
                         children: [
-                          const Text(
-                            "0",
+                          Text(
+                            snapshot.data.get('following').length.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
@@ -212,8 +210,8 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                       ),
                       Column(
                         children: [
-                          const Text(
-                            "0",
+                          Text(
+                            snapshot.data.get('following').length.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,

@@ -21,7 +21,7 @@ class _CircleAnimationState extends State<CircleAnimation>
     controller = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 2000,
+        milliseconds: 4000,
       ),
     );
     controller.forward();

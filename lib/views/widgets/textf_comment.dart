@@ -4,20 +4,27 @@ import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/views/widgets/colors.dart';
 
-class TextFComment extends StatelessWidget {
-  TextFComment(
-      {Key? key,
-      required this.check,
-      required this.videoID,
-      required this.uid,
-      required this.commentID})
-      : super(key: key);
-  String check = '';
-  String uid, videoID, commentID;
+class TextFComment extends StatefulWidget {
+  const TextFComment({
+    Key? key,
+    required this.check,
+    required this.videoID,
+    required this.uid,
+    required this.commentID,
+  }) : super(key: key);
+
+  final String check;
+  final String uid, videoID, commentID;
+
+  @override
+  _TextFCommentState createState() => _TextFCommentState();
+}
+
+class _TextFCommentState extends State<TextFComment> {
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
     return Consumer<Cmodel>(builder: (context, value, child) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -25,7 +32,7 @@ class TextFComment extends StatelessWidget {
           height: 40,
           child: TextField(
             controller: controller,
-            textAlignVertical: TextAlignVertical.bottom,
+            textAlignVertical: TextAlignVertical.center,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -37,25 +44,25 @@ class TextFComment extends StatelessWidget {
               hintText: "Comment here ...",
               suffixIcon: IconButton(
                 onPressed: () {
-                  value.checkComment(check);
+                  value.checkComment(widget.check);
                   if (value.isSend) {
                     VideoServices.sendComment(
-                        context: context,
-                        message: controller.text,
-                        uid: uid,
-                        videoID: videoID);
-                    controller.clear();
+                      context: context,
+                      message: controller.text,
+                      uid: widget.uid,
+                      videoID: widget.videoID,
+                    );
                   }
                   if (value.isRepCM) {
                     VideoServices.RepComment(
-                        message: controller.text,
-                        uid: uid,
-                        videoID: videoID,
-                        idComment: commentID);
-                    controller.clear();
+                      message: controller.text,
+                      uid: widget.uid,
+                      videoID: widget.videoID,
+                      idComment: widget.commentID,
+                    );
                   }
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.send_rounded,
                   color: Colors.black,
                 ),

@@ -31,19 +31,17 @@ class _BottomStyleLoginState extends State<BottomStyleLogin> {
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
-    } else {
-      // Xử lý khi đăng nhập thất bại
-    }
+    } else {}
   }
 
   void checkcode(BuildContext context) {
     if (widget.checkButton == false) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ứng dụng đang được phát triển.')));
+          SnackBar(content: Text('Chức năng đang được phát triển.')));
     } else {
       if (widget.nameButton == "User email/ username") {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
+            .showSnackBar(SnackBar(content: Text('Đã chọn.')));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginScreen()));
       }

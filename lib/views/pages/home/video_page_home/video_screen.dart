@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/show_comment.dart';
+import 'package:tiktok_app_poly/views/pages/home/shearch/shearch_video_screen.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
 
 import '../../../../database/services/storage_services.dart';
@@ -119,9 +119,10 @@ class VideoScreen extends StatelessWidget {
       width: 50,
       height: 50,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               height: 40,
               width: 40,
               decoration: BoxDecoration(
@@ -144,7 +145,7 @@ class VideoScreen extends StatelessWidget {
     );
   }
 
-  _showBottomSheetooooooo(BuildContext context, String videoID,String uid) {
+  _showBottomSheetooooooo(BuildContext context, String videoID, String uid) {
     //_scaffoldKey.currentState.showBottomSheet((context) => null);
     showModalBottomSheet<void>(
       shape: const RoundedRectangleBorder(
@@ -174,39 +175,55 @@ class VideoScreen extends StatelessWidget {
             TabBarView(
               children: [body(context, true), body(context, false)],
             ),
-            const Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SizedBox(
-                height: 50,
-                child: TabBar(
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Following',
-                        style:
-                            TextStyle(fontSize: 18), // Điều chỉnh cỡ chữ ở đây
+            Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: 50,
+                    child: TabBar(
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            'Following',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            'Related',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                      indicator: UnderlineTabIndicator(
+                        borderSide: BorderSide(
+                          width: 3,
+                          color: Colors.white,
+                        ),
+                        insets: EdgeInsets.only(left: 70, right: 70),
                       ),
                     ),
-                    Tab(
-                      child: Text(
-                        'Related',
-                        style:
-                            TextStyle(fontSize: 18), // Điều chỉnh cỡ chữ ở đây
-                      ),
-                    ),
-                  ],
-                  indicator: UnderlineTabIndicator(
-                    borderSide: BorderSide(
-                      width: 3,
-                      color: Colors.white,
-                    ),
-                    insets: EdgeInsets.only(left: 70, right: 70),
-                    // Điều chỉnh chiều dài ở đây
                   ),
                 ),
-              ),
+                Positioned(
+                  top: 5,
+                  right: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.search),
+                    color: Colors.white,
+                    iconSize: 30,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ShearchVideo()));
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -251,7 +268,8 @@ class VideoScreen extends StatelessWidget {
                       bottom: index % 2 == 0
                           ? MediaQuery.of(context).size.height * 0.25
                           : null,
-                      child: VideoPlayerItem(context: context,
+                      child: VideoPlayerItem(
+                        context: context,
                         videoUrl: item.videoUrl,
                       ),
                     ),
@@ -354,7 +372,7 @@ class VideoScreen extends StatelessWidget {
                                         InkWell(
                                           onTap: () {
                                             _showBottomSheetooooooo(
-                                                context, item.id,uid!);
+                                                context, item.id, uid!);
                                           },
                                           child: const Icon(
                                             CupertinoIcons
@@ -398,7 +416,7 @@ class VideoScreen extends StatelessWidget {
                                             print('Đã click');
                                           },
                                           child: const Icon(
-                                            Icons.save,
+                                            Icons.bookmark,
                                             size: 25,
                                             color: Colors.white,
                                           ),
@@ -426,9 +444,15 @@ class VideoScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    CircleAnimation(
-                                      child: buildMusicAlbum(item.profilePhoto),
-                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        print("Đã click vào CircleAnimation");
+                                      },
+                                      child: CircleAnimation(
+                                        child:
+                                            buildMusicAlbum(item.profilePhoto),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -446,7 +470,6 @@ class VideoScreen extends StatelessWidget {
       ),
     );
   }
-
 
   showOptionsDialog(BuildContext context, String url) {
     return showDialog(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/show_comment.dart';
 import 'package:tiktok_app_poly/views/widgets/circle_animation.dart';
+
 import '../../../../../database/services/storage_services.dart';
 import '../../../../../database/services/video_service.dart';
 import '../../../../widgets/video_player_item.dart';
@@ -18,7 +19,7 @@ class VideoProfileScreen extends StatelessWidget {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   final CollectionReference users =
-  FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
   buildProfile(String profilePhoto) {
     return SizedBox(
       width: 60,
@@ -46,6 +47,7 @@ class VideoProfileScreen extends StatelessWidget {
       ]),
     );
   }
+
   buildMusicAlbum(String profilePhoto) {
     return SizedBox(
       width: 50,
@@ -76,8 +78,7 @@ class VideoProfileScreen extends StatelessWidget {
     );
   }
 
-
-  _showBottomSheet(BuildContext context, String videoID,String uid) {
+  _showBottomSheet(BuildContext context, String videoID, String uid) {
     //_scaffoldKey.currentState.showBottomSheet((context) => null);
     showModalBottomSheet<void>(
       shape: const RoundedRectangleBorder(
@@ -93,6 +94,7 @@ class VideoProfileScreen extends StatelessWidget {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,7 +124,8 @@ class VideoProfileScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   child: Stack(
                     children: [
-                      VideoPlayerItem(context: context,
+                      VideoPlayerItem(
+                        context: context,
                         videoUrl: item.videoUrl,
                       ),
                       Column(
@@ -142,9 +145,9 @@ class VideoProfileScreen extends StatelessWidget {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           '@ ${item.username}',
@@ -189,7 +192,7 @@ class VideoProfileScreen extends StatelessWidget {
                                           5),
                                   child: Column(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       buildProfile(item.profilePhoto),
                                       Column(
@@ -202,8 +205,8 @@ class VideoProfileScreen extends StatelessWidget {
                                               Icons.favorite,
                                               size: 25,
                                               color: snapshot
-                                                  .data!.docs[0]['likes']
-                                                  .contains(uid)
+                                                      .data!.docs[0]['likes']
+                                                      .contains(uid)
                                                   ? Colors.red
                                                   : Colors.white,
                                             ),
@@ -244,7 +247,7 @@ class VideoProfileScreen extends StatelessWidget {
                                                 .snapshots(),
                                             builder: (BuildContext context,
                                                 AsyncSnapshot<QuerySnapshot>
-                                                snapshot) {
+                                                    snapshot) {
                                               if (snapshot.hasError) {
                                                 return const Text(
                                                     'Something went wrong');
@@ -282,7 +285,7 @@ class VideoProfileScreen extends StatelessWidget {
                                       ),
                                       CircleAnimation(
                                         child:
-                                        buildMusicAlbum(item.profilePhoto),
+                                            buildMusicAlbum(item.profilePhoto),
                                       ),
                                     ],
                                   ),

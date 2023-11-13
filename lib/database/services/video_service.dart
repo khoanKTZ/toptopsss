@@ -119,6 +119,7 @@ class VideoServices {
       required idComment}) async {
     final CollectionReference users =
         FirebaseFirestore.instance.collection('users');
+    // ignore: unused_local_variable
     CollectionReference videos =
         FirebaseFirestore.instance.collection('videos');
     if (message == '') return;
@@ -142,18 +143,18 @@ class VideoServices {
         .collection('repcomment')
         .doc('RepCount $len')
         .set({
-          'createdOn': FieldValue.serverTimestamp(),
-          'uID': uid,
-          'content': message,
-          'avatarURL': avatarURL,
-          'userName': userName,
-          'id': 'RepCount $len',
-          'likes': []
-        })
-        .then((value) {print("thêm dữ liệu thành công");})
-        .catchError((error) {
-          print("Lỗi khi thêm dữ liệu vào repcomment: $error");
-        });
+      'createdOn': FieldValue.serverTimestamp(),
+      'uID': uid,
+      'content': message,
+      'avatarURL': avatarURL,
+      'userName': userName,
+      'id': 'RepCount $len',
+      'likes': []
+    }).then((value) {
+      print("thêm dữ liệu thành công");
+    }).catchError((error) {
+      print("Lỗi khi thêm dữ liệu vào repcomment: $error");
+    });
   }
 
   //xóa comment
@@ -163,7 +164,8 @@ class VideoServices {
         .doc(videoID)
         .collection('commentList')
         .doc(idexx)
-        .delete().then((value) => {print("xóa thành công")});
+        .delete()
+        .then((value) => {print("xóa thành công")});
 
     var allDocs = await FirebaseFirestore.instance
         .collection('videos')
