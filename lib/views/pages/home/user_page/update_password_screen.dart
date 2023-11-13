@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../../../database/services/user_service.dart';
-import '../../../widgets/colors.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/text.dart';
-import '../../../widgets/textformfield.dart';
 
 // ignore: must_be_immutable
 class UpdatePasswordScreen extends StatelessWidget {
   UpdatePasswordScreen({Key? key}) : super(key: key);
 
   TextEditingController newPassword = TextEditingController();
-
   TextEditingController confirmPasswordController = TextEditingController();
-
   final _updatePasswordFormKey = GlobalKey<FormState>();
 
   doEdit(BuildContext context) {
@@ -28,7 +24,7 @@ class UpdatePasswordScreen extends StatelessWidget {
     if (value == '') {
       return "Empty Field !";
     } else if (value.length < 6) {
-      return "Your password is so short !";
+      return "Your password is too short !";
     }
     return null;
   }
@@ -61,7 +57,7 @@ class UpdatePasswordScreen extends StatelessWidget {
                     left: MediaQuery.of(context).size.width / 5,
                     child: Center(
                       child: CustomText(
-                        text: 'Update Pass',
+                        text: 'Update Password',
                         fontsize: 30,
                         color: Colors.black,
                         fontFamily: 'DancingScript',
@@ -72,40 +68,14 @@ class UpdatePasswordScreen extends StatelessWidget {
                     top: 20,
                     right: 0,
                     child: IconButton(
-                      iconSize: 40,
+                      iconSize: 20,
                       icon: const Icon(
                         Icons.backspace,
-                        color: Colors.black,
+                        color: Color.fromARGB(255, 255, 0, 0),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                    ),
-                  ),
-                  Positioned(
-                    bottom: MediaQuery.of(context).size.height / 12,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          // borderRadius: new BorderRadius.only(
-                          //   bottomRight: const Radius.circular(40.0),
-                          //   bottomLeft: const Radius.circular(40.0),
-                          // ),
-                          ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 4,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          // borderRadius: new BorderRadius.only(
-                          //   bottomRight: const Radius.circular(40.0),
-                          //   bottomLeft: const Radius.circular(40.0),
-                          // ),
-                          ),
                     ),
                   ),
                   Positioned(
@@ -122,35 +92,53 @@ class UpdatePasswordScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const SizedBox(height: 10),
-                              CustomTextFormField(
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black, // Màu đường viền
+                                    width: 0.5, // Độ dày của đường viền
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      15.0), // Độ cong của góc
+                                ),
+                                child: TextField(
                                   controller: newPassword,
-                                  text: 'New Password',
-                                  hint: '',
-                                  passCheck: true,
-                                  onSave: (value) {
-                                    //controller.userPwd = value!;
-                                  },
-                                  validator: (value) {
-                                    return validatePassword(value!);
-                                  }),
-                              CustomTextFormField(
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 10),
+                                    hintText: "New Password",
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: TextField(
                                   controller: confirmPasswordController,
-                                  text: 'Confirm Password',
-                                  hint: '',
-                                  passCheck: true,
-                                  onSave: (value) {
-                                    //controller.userPwd = value!;
-                                  },
-                                  validator: (value) {
-                                    return validateConfirmPassword(value!);
-                                  }),
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 15.0, horizontal: 10),
+                                    hintText: "Confirm Password",
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
                               const SizedBox(height: 10),
                               CustomButton(
                                 onPress: () {
                                   doEdit(context);
                                 },
                                 text: 'Save',
-                                color: MyColors.thirdColor,
+                                color: Colors.pink,
                               ),
                             ],
                           ),

@@ -131,6 +131,16 @@ class UserService {
     }
   }
 
+  static forgotPassword({required BuildContext context, required email}) {
+    try {} catch (e) {
+      getSnackBar(
+        'Update Password',
+        'Fail. $e',
+        Colors.red,
+      ).show(context);
+    }
+  }
+
   static Future<void> follow(String uid) async {
     String currentUid = FirebaseAuth.instance.currentUser!.uid;
     print("$currentUid++++$uid");

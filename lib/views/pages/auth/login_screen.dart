@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/auth_service.dart';
-import 'package:tiktok_app_poly/views/pages/home/user_page/update_password_screen.dart';
+import 'package:tiktok_app_poly/views/pages/auth/forgot_password.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -157,7 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UpdatePasswordScreen()));
+                              builder: (context) =>
+                                  const ForgotPasswordScreen()));
                     },
                     child: Text(
                       'Forgot your password?',
