@@ -37,7 +37,7 @@ class RepCMW extends StatelessWidget {
                 children: [
                   value.isShowRepCM
                       ? Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.only(left: 50,right: 20),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 200,
@@ -55,70 +55,77 @@ class RepCMW extends StatelessWidget {
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.spaceAround,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
-                                          CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                '${items['avatarURL']}'),
+                                          Container(
+                                            width: 30,
+                                            height: 30,
+                                            child: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  '${items['avatarURL']}'),
+                                            ),
                                           ),
                                           const SizedBox(
                                             width: 10,
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${items['userName']}',
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black38),
-                                              ),
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4,
-                                                child: GestureDetector(
-                                                  onTap: () {},
-                                                  child: Text(
-                                                    '${items['content']}',
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.black,
-                                                      fontFamily: 'Popins',
+                                          Container(
+                                            width: 200,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '${items['userName']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.black38),
+                                                ),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      3 /
+                                                      4,
+                                                  child: GestureDetector(
+                                                    onTap: () {},
+                                                    child: Text(
+                                                      '${items['content']}',
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Popins',
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    items['createdOn'] == null
-                                                        ? DateTime.now()
-                                                            .toString()
-                                                        : DateFormat.yMMMd()
-                                                            .add_jm()
-                                                            .format(items[
-                                                                    'createdOn']
-                                                                .toDate()),
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.black38,
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      items['createdOn'] == null
+                                                          ? DateTime.now()
+                                                              .toString()
+                                                          : DateFormat.yMMMd()
+                                                              .add_jm()
+                                                              .format(items[
+                                                                      'createdOn']
+                                                                  .toDate()),
+                                                      style: const TextStyle(
+                                                        fontSize: 8,
+                                                        color: Colors.black38,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                ],
-                                              ),
-                                            ],
+                                                    const SizedBox(width: 8),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           const Spacer(),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                right: 8.0),
+                                                right: 2.0),
                                             child: Column(
                                               children: [
                                                 InkWell(
@@ -136,7 +143,7 @@ class RepCMW extends StatelessWidget {
                                                                 ['likes']
                                                             .contains(uid)
                                                         ? Colors.red
-                                                        : Colors.grey,
+                                                        : Colors.grey,size: 17,
                                                   ),
                                                 ),
                                                 Text(
