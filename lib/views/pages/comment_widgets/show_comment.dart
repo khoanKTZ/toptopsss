@@ -11,9 +11,11 @@ class CommentItem extends StatelessWidget {
   final String videoID;
   final String uid;
 
+  FocusNode _focusNode = FocusNode();
+
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   TextEditingController _textEditingControllerup =
-      TextEditingController(); // Khai báo ở cấp độ lớp
+  TextEditingController(); // Khai báo ở cấp độ lớp
 
   _showDialog(BuildContext context, String idexx) {
     showDialog(
@@ -50,8 +52,8 @@ class CommentItem extends StatelessWidget {
     );
   }
 
-  Future<void> _showUpdateDialog(
-      BuildContext context, String indexT, String videoID) async {
+  Future<void> _showUpdateDialog(BuildContext context, String indexT,
+      String videoID) async {
     _textEditingControllerup.text = ''; // Đặt giá trị ban đầu cho TextField
     return showDialog(
       context: context,
@@ -60,7 +62,7 @@ class CommentItem extends StatelessWidget {
           title: Text("Cập nhật bình luận"),
           content: TextField(
             controller:
-                _textEditingControllerup, // Gán controller cho TextField
+            _textEditingControllerup, // Gán controller cho TextField
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(hintText: 'Nhập nội dung bình luận'),
           ),
@@ -95,7 +97,10 @@ class CommentItem extends StatelessWidget {
       builder: (BuildContext context) {
         return SizedBox(
 
-          height: MediaQuery.of(context).size.height * 2/5,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 2 / 5 + 50,
           child: TextFComment(
               check: 'rep', videoID: videoID, uid: uid, commentID: idComment),
         );
@@ -105,9 +110,18 @@ class CommentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final RenderObject? overlay =
+    Overlay
+        .of(context)
+        .context
+        .findRenderObject();
+    Offset tapDownPosition = Offset.zero;
     return Scaffold(
       body: SizedBox(
-        height: MediaQuery.of(context).size.height * 3 / 4,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height * 3 / 4,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,7 +134,7 @@ class CommentItem extends StatelessWidget {
               children: [
                 StreamBuilder<QuerySnapshot>(
                   stream:
-                      videos.doc(videoID).collection('commentList').snapshots(),
+                  videos.doc(videoID).collection('commentList').snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
@@ -144,7 +158,9 @@ class CommentItem extends StatelessWidget {
             ),
             Flexible(
               child: StreamBuilder<QuerySnapshot>(
-                stream: videos.doc(videoID).collection('commentList').snapshots(),
+                stream: videos.doc(videoID)
+                    .collection('commentList')
+                    .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
@@ -164,11 +180,13 @@ class CommentItem extends StatelessWidget {
                                     height: 10,
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .start,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: [
                                         CircleAvatar(
                                           backgroundImage: NetworkImage(
@@ -179,7 +197,7 @@ class CommentItem extends StatelessWidget {
                                         ),
                                         Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '${item['userName']}',
@@ -188,18 +206,20 @@ class CommentItem extends StatelessWidget {
                                                   color: Colors.black38),
                                             ),
                                             SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
+                                              width: MediaQuery
+                                                  .of(context)
+                                                  .size
+                                                  .width *
                                                   3 /
                                                   4,
                                               child: GestureDetector(
                                                 onTap: () {
                                                   // Xử lý sự kiện khi chạm vào Text
                                                   String indexite =
-                                                      item.get('id').toString();
+                                                  item.get('id').toString();
                                                   String idCheck =
-                                                      item.get('uID').toString();
+                                                  item.get('uID')
+                                                      .toString();
                                                   if (uid == idCheck) {
                                                     _showDialog(
                                                         context, indexite);
@@ -219,12 +239,13 @@ class CommentItem extends StatelessWidget {
                                               children: [
                                                 Text(
                                                   item['createdOn'] == null
-                                                      ? DateTime.now().toString()
+                                                      ? DateTime.now()
+                                                      .toString()
                                                       : DateFormat.yMMMd()
-                                                          .add_jm()
-                                                          .format(
-                                                              item['createdOn']
-                                                                  .toDate()),
+                                                      .add_jm()
+                                                      .format(
+                                                      item['createdOn']
+                                                          .toDate()),
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.black38,
@@ -233,8 +254,10 @@ class CommentItem extends StatelessWidget {
                                                 const SizedBox(width: 8),
                                                 // Khoảng cách giữa "Trả lời" và thời gian
                                                 GestureDetector(
-                                                  onTap: () => _showRepCM(context,
-                                                      videoID, item.get('id')),
+                                                  onTap: () =>
+                                                      _showRepCM(context,
+                                                          videoID,
+                                                          item.get('id')),
                                                   child: const Text(
                                                     'Trả lời',
                                                     style: const TextStyle(
@@ -250,7 +273,7 @@ class CommentItem extends StatelessWidget {
                                         const Spacer(),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(right: 8.0),
+                                          const EdgeInsets.only(right: 8.0),
                                           child: Column(
                                             children: [
                                               InkWell(
@@ -261,13 +284,14 @@ class CommentItem extends StatelessWidget {
                                                 child: Icon(
                                                   Icons.favorite,
                                                   color: snapshot.data!
-                                                          .docs[index]['likes']
-                                                          .contains(uid)
+                                                      .docs[index]['likes']
+                                                      .contains(uid)
                                                       ? Colors.red
                                                       : Colors.grey,
                                                 ),
                                               ),
-                                              Text('${item['likes'].length}'),
+                                              Text('${item['likes']
+                                                  .length}'),
                                             ],
                                           ),
                                         ),

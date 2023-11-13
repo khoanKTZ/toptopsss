@@ -12,10 +12,8 @@ class TextFComment extends StatefulWidget {
     required this.uid,
     required this.commentID,
   }) : super(key: key);
-
   final String check;
   final String uid, videoID, commentID;
-
   @override
   _TextFCommentState createState() => _TextFCommentState();
 }
