@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/views/pages/auth/auth_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_screen.dart';
@@ -27,6 +28,7 @@ class AuthService {
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
           (route) => false);
+      NotifiService().showNotification(title: "thông báo",body: "đăng nhập thành công");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         getSnackBar(
@@ -37,7 +39,6 @@ class AuthService {
         //print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print(e.code);
-
         getSnackBar(
                 'Login', 'Wrong password provided for that user.', Colors.red)
             .show(context);
