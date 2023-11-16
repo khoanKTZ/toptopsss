@@ -41,5 +41,4 @@ class NotifiService {
     return _flu.show(
         id, title, body,await notificationDetails());
   }
-
 }
