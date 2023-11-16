@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok_app_poly/provider/LoginFacebook_provider.dart';
 import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/provider/gender_model.dart';
 import 'package:tiktok_app_poly/provider/loading_model.dart';
@@ -41,6 +42,9 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (context) => VideoProvider(),
           child: ShearchVideo(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LoginFacebookProvider(),
         ),
       ],
       child: const MyApp(),

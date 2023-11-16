@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/database/services/forgot_service.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -9,9 +10,35 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
-  bool isChecked = false;
+  String? emailErrorText;
 
-  bool value = false;
+  bool isValidEmail(String email) {
+    return RegExp(
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(email);
+  }
+
+  Fogot(BuildContext context) {
+    setState(() {
+      emailErrorText = validateEmail();
+    });
+
+    if (emailErrorText == null) {
+      ForgotService.forgotEmail(context: context, email: emailController.text);
+    }
+  }
+
+  String? validateEmail() {
+    if (emailController.text.isEmpty) {
+      return "Email is required!!";
+    } else if (!isValidEmail(emailController.text)) {
+      return "Invalid email format!";
+    }
+    return null;
+  }
+
+  bool emailRadioValue = false;
+  bool phoneRadioValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +51,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           const SizedBox(
             height: 20,
           ),
-          Center(
+          const Center(
             child: const Text(
               'Thay đổi mật khẩu',
               style: TextStyle(fontSize: 30, color: Colors.black),
@@ -39,11 +66,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Row(
               children: [
                 Radio(
-                  value: value,
-                  groupValue: value,
+                  value: emailRadioValue,
+                  groupValue: true,
                   onChanged: (bool? newValue) {
                     setState(() {
-                      value = newValue ?? false;
+                      emailRadioValue = true;
+                      phoneRadioValue = false;
                     });
                   },
                 ),
@@ -65,8 +93,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 10.0, horizontal: 10),
-                          hintText: "Your email...",
-                          border: InputBorder.none,
+                          hintText: "Your Email",
+                          border: InputBorder
+                              .none, // Để loại bỏ đường viền mặc định của TextField
                         ),
                       ),
                     ),
@@ -75,6 +104,74 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ],
             ),
           ),
+          if (emailErrorText != null)
+            Text(
+              emailErrorText!,
+              style: TextStyle(color: Colors.red),
+            ),
+          TextButton(
+            onPressed: () {
+              Fogot(context);
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: Text(
+              'Gửi mã xác thực',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10,
+              left: 1,
+              right: 1,
+            ),
+            child: Container(
+              margin: EdgeInsets.only(top: 250, left: 20, right: 20),
+              child: Container(
+                child: Column(
+                  children: [
+                    const Text(
+                      'Copyright ©KhoanUBU Online. Trademarks belong to their respective ',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    const Center(
+                      child: const Text(
+                        'owners. All rights reserved.',
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                    Container(
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('Điều Khoản Sử Dụng    |',
+                                  style: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 16, 16, 16))),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('Chính Sách Riêng Tư',
+                                  style: TextStyle(
+                                      color:
+                                          const Color.fromARGB(255, 0, 0, 0))),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

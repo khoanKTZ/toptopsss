@@ -12,7 +12,7 @@ class UserService {
     final CollectionReference users =
         FirebaseFirestore.instance.collection('users');
     const storage = FlutterSecureStorage();
-    String? UID = await storage.read(key: 'uID');
+    String? UID = FirebaseAuth.instance.currentUser!.uid;
     final result = await users.doc(UID).get();
     return result;
   }

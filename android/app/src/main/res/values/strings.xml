@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">tiktok_clone</string>
+    <string name="facebook_app_id">842145184056029</string>
+    <string name="fb_login_protocol_scheme">fb842145184056029</string>
+    <string name="facebook_client_token">56789</string>
+</resources>

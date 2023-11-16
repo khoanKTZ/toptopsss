@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 
@@ -64,14 +65,14 @@ class LoginWithPhoneNumber extends StatelessWidget {
                         controller: context
                             .watch<LoginPhoneProvider>()
                             .textEditingController,
-                        keyboardType: TextInputType.number,
+
                         style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
                             fontSize: 18),
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                          hintText: "VD: 384745334",
+                          hintText: "",
                           hintStyle:
                               TextStyle(color: Colors.grey, fontSize: 14),
                           enabledBorder: UnderlineInputBorder(
@@ -83,6 +84,12 @@ class LoginWithPhoneNumber extends StatelessWidget {
                                 BorderSide(color: Colors.black87, width: 1),
                           ),
                         ),
+
+                        keyboardType:
+                            TextInputType.phone, // Chỉ định bàn phím số
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         onChanged: (value) {
                           myProvider.onTextFieldChanged();
                         },

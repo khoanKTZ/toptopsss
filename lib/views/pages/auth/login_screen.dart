@@ -54,17 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  String? validate() {
-    if (emailController.text.isEmpty) {
-      return "Email is required!!";
-    } else if (passwordController.text.isEmpty) {
-      return "Password is required!";
-    } else if (!isValidEmail(emailController.text)) {
-      return "Invalid email format!";
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/database/services/LoginFacebook_service.dart';
 import 'package:tiktok_app_poly/provider/SignInGoogle_provider.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_screen.dart';
@@ -34,6 +35,20 @@ class _BottomStyleLoginState extends State<BottomStyleLogin> {
     } else {}
   }
 
+  Future<void> _signInWithFacebook(BuildContext context) async {
+    final authService = LoginFacebookService();
+    final userCredential = await authService.signInWithFacebook(context);
+
+    if (userCredential != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Xử lý khi đăng nhập thất bại
+    }
+  }
+
   void checkcode(BuildContext context) {
     if (widget.checkButton == false) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,6 +72,12 @@ class _BottomStyleLoginState extends State<BottomStyleLogin> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
         _signInWithGoogle(context);
+      }
+
+      if (widget.nameButton == "Continue with Facebook") {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Đã nhấp.')));
+        _signInWithFacebook(context);
       }
     }
   }
