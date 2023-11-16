@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/forgot_service.dart';
+import 'package:tiktok_app_poly/views/pages/auth/login_screen.dart';
+import 'package:tiktok_app_poly/views/widgets/snackbar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -11,6 +14,12 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController emailController = TextEditingController();
   String? emailErrorText;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   bool isValidEmail(String email) {
     return RegExp(
@@ -25,6 +34,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     if (emailErrorText == null) {
       ForgotService.forgotEmail(context: context, email: emailController.text);
+    }
+  }
+
+  Future<void> resetPassword() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: emailController.text.trim(),
+      );
+
+      getSnackBar(
+        'Forgot',
+        'Password Reset Email sent',
+        Colors.red,
+      ).show(context);
+      // Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      // ignore: use_build_context_synchronously
+      getSnackBar(
+        'Error',
+        e.message ?? 'Error occurred',
+        Colors.red,
+      ).show(context);
+      Navigator.of(context).pop();
     }
   }
 
@@ -111,7 +146,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           TextButton(
             onPressed: () {
-              Fogot(context);
+              resetPassword();
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.red,
@@ -145,28 +180,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     Container(
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: Text('Điều Khoản Sử Dụng    |',
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 16, 16, 16))),
+                      margin: EdgeInsets.symmetric(
+                          vertical: MediaQuery.of(context).size.height * 0.1),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Điều Khoản Sử Dụng    |',
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 16, 16, 16),
+                              ),
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text('Chính Sách Riêng Tư',
-                                  style: TextStyle(
-                                      color:
-                                          const Color.fromARGB(255, 0, 0, 0))),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              'Chính Sách Riêng Tư',
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
