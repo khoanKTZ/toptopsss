@@ -23,10 +23,15 @@ class SignInGooogleService {
 
       // Lưu thông tin người dùng vào Firestore
       await _userCollection.doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
-        'name': userCredential.user!.displayName ?? '',
+        'uID': userCredential.user!.uid,
+        'fullName': userCredential.user!.displayName ?? '',
         'email': userCredential.user!.email ?? '',
-        'avatarURL': userCredential.user!.photoURL,
+        'avartaURL': userCredential.user!.photoURL,
+        'follower': [],
+        'following': [],
+        'age': '',
+        'gender': '',
+        'phone': '',
         // Thêm các thông tin khác nếu cần
       });
 

@@ -310,7 +310,10 @@ class _UserInfoScreenState extends State<UserInfoScreen>
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Follower_Screen()));
+                                      builder: (context) =>
+                                          const Follower_Screen(
+                                            peopleID: '',
+                                          )));
                             },
                             child: Column(
                               children: [

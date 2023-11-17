@@ -164,7 +164,7 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                                       );
                                     } else {
                                       return CircleAvatar(
-                                        backgroundColor: Colors.black,
+                                        backgroundColor: MyColors.mainColor,
                                         backgroundImage: NetworkImage(snapshot
                                             .data?.docs.first['avartaURL']),
                                       );
@@ -211,7 +211,7 @@ class _PeopleInfoScreenState extends State<PeopleInfoScreen>
                       Column(
                         children: [
                           Text(
-                            snapshot.data.get('following').length.toString(),
+                            snapshot.data.get('follower').length.toString(),
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
