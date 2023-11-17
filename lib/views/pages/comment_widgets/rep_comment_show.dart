@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/provider/comment_model.dart';
 
-class RepCMW extends StatelessWidget {
+class RepCMW extends StatefulWidget {
   RepCMW(
       {Key? key,
       required this.videoID,
@@ -13,15 +14,21 @@ class RepCMW extends StatelessWidget {
       required this.uid})
       : super(key: key);
   String videoID, itemID, uid;
+
+  @override
+  State<RepCMW> createState() => _RepCMWState();
+}
+
+class _RepCMWState extends State<RepCMW> {
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: videos
-          .doc(videoID)
+          .doc(widget.videoID)
           .collection('commentList')
-          .doc(itemID)
+          .doc(widget.itemID)
           .collection('repcomment')
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshots) {
@@ -131,8 +138,8 @@ class RepCMW extends StatelessWidget {
                                                 InkWell(
                                                   onTap: () {
                                                     VideoServices.likeReComment(
-                                                        videoID,
-                                                        itemID,
+                                                        widget.videoID,
+                                                        widget.itemID,
                                                         items['id']);
                                                   },
                                                   child: Icon(
@@ -141,7 +148,7 @@ class RepCMW extends StatelessWidget {
                                                             .data!
                                                             .docs[index]
                                                                 ['likes']
-                                                            .contains(uid)
+                                                            .contains(widget.uid)
                                                         ? Colors.red
                                                         : Colors.grey,size: 17,
                                                   ),

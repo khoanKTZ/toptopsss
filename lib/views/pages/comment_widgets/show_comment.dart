@@ -1,22 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/rep_comment_show.dart';
 import 'package:tiktok_app_poly/views/widgets/textf_comment.dart';
 
-class CommentItem extends StatelessWidget {
+class CommentItem extends StatefulWidget {
   CommentItem({Key? key, required this.videoID, required this.uid})
       : super(key: key);
   final String videoID;
   final String uid;
 
-  FocusNode _focusNode = FocusNode();
+  @override
+  State<CommentItem> createState() => _CommentItemState();
+}
 
+
+class _CommentItemState extends State<CommentItem> {
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   TextEditingController _textEditingControllerup =
-  TextEditingController(); // Khai báo ở cấp độ lớp
-
+  TextEditingController();
+ // Khai báo ở cấp độ lớp
   _showDialog(BuildContext context, String idexx,String value) {
     showDialog(
       context: context,
@@ -27,7 +32,7 @@ class CommentItem extends StatelessWidget {
             children: <Widget>[
               TextButton(
                 onPressed: () {
-                  VideoServices.delete(videoID: videoID, idexx: idexx);
+                  VideoServices.delete(videoID: widget.videoID, idexx: idexx);
                   Navigator.pop(context);
                 },
                 child: Text("Delete"),
@@ -35,7 +40,7 @@ class CommentItem extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   print('đã click');
-                  _showUpdateDialog(context, idexx, videoID,value);
+                  _showUpdateDialog(context, idexx, widget.videoID,value);
                 },
                 child: Text("Update"),
               ),
@@ -63,7 +68,7 @@ class CommentItem extends StatelessWidget {
             content: SizedBox(
               height: 100,
                 width: 300,
-                child: TextFComment(check: 'update', videoID: videoID, uid: uid, commentID: indexT,vauleUp: value,))
+                child: TextFComment(check: 'update', videoID: videoID, uid: widget.uid, commentID: indexT,vauleUp: value,))
         );
       },
     );
@@ -79,11 +84,12 @@ class CommentItem extends StatelessWidget {
               .size
               .height * 2 / 5 + 50,
           child: TextFComment(
-              check: 'rep', videoID: videoID, uid: uid, commentID: idComment,vauleUp: ''),
+              check: 'rep', videoID: videoID, uid: widget.uid, commentID: idComment,vauleUp: ''),
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +117,7 @@ class CommentItem extends StatelessWidget {
               children: [
                 StreamBuilder<QuerySnapshot>(
                   stream:
-                  videos.doc(videoID).collection('commentList').snapshots(),
+                  videos.doc(widget.videoID).collection('commentList').snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
@@ -135,7 +141,7 @@ class CommentItem extends StatelessWidget {
             ),
             Flexible(
               child: StreamBuilder<QuerySnapshot>(
-                stream: videos.doc(videoID)
+                stream: videos.doc(widget.videoID)
                     .collection('commentList')
                     .snapshots(),
                 builder: (BuildContext context,
@@ -197,7 +203,7 @@ class CommentItem extends StatelessWidget {
                                                   String idCheck =
                                                   item.get('uID')
                                                       .toString();
-                                                  if (uid == idCheck) {
+                                                  if (widget.uid == idCheck) {
                                                     _showDialog(
                                                         context, indexite,item['content']);
                                                   }
@@ -233,7 +239,7 @@ class CommentItem extends StatelessWidget {
                                                 GestureDetector(
                                                   onTap: () =>
                                                       _showRepCM(context,
-                                                          videoID,
+                                                          widget.videoID,
                                                           item.get('id')),
                                                   child: const Text(
                                                     'Trả lời',
@@ -256,13 +262,13 @@ class CommentItem extends StatelessWidget {
                                               InkWell(
                                                 onTap: () {
                                                   VideoServices.likeComment(
-                                                      videoID, item['id']);
+                                                      widget.videoID, item['id']);
                                                 },
                                                 child: Icon(
                                                   Icons.favorite,
                                                   color: snapshot.data!
                                                       .docs[index]['likes']
-                                                      .contains(uid)
+                                                      .contains(widget.uid)
                                                       ? Colors.red
                                                       : Colors.grey,
                                                 ),
@@ -276,9 +282,9 @@ class CommentItem extends StatelessWidget {
                                     ),
                                   ),
                                   RepCMW(
-                                    videoID: videoID,
+                                    videoID: widget.videoID,
                                     itemID: item['id'],
-                                    uid: uid,
+                                    uid: widget.uid,
                                   )
                                 ],
                               );
@@ -295,8 +301,8 @@ class CommentItem extends StatelessWidget {
             Container(
               child: TextFComment(
                 check: 'send',
-                videoID: videoID,
-                uid: uid,
+                videoID: widget.videoID,
+                uid: widget.uid,
                 commentID: '',
                 vauleUp: '',
               ),
