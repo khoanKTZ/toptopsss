@@ -19,6 +19,7 @@ class LoginFacebookService {
 
         if (userCredential.user != null) {
           // Lấy thông tin người dùng từ Firestore
+          // ignore: unused_local_variable
           DocumentSnapshot userSnapshot = await _firestore
               .collection('users')
               .doc(userCredential.user!.uid)

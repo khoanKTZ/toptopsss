@@ -64,6 +64,7 @@ class SearchService {
 
   Future<String> getUserById(String uid) async {
     try {
+      // ignore: unused_local_variable
       DocumentSnapshot docUser =
           await FirebaseFirestore.instance.collection("users").doc(uid).get();
       return 'null';

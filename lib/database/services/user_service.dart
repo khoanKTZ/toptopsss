@@ -11,6 +11,7 @@ class UserService {
   static Future getUserInfo() async {
     final CollectionReference users =
         FirebaseFirestore.instance.collection('users');
+    // ignore: unused_local_variable
     const storage = FlutterSecureStorage();
     String? UID = FirebaseAuth.instance.currentUser!.uid;
     final result = await users.doc(UID).get();
