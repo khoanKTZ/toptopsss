@@ -67,6 +67,7 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginAll(),
       // home: const ShearchVideo(),
+      // home: TestAnimation(),
     );
   }
 }

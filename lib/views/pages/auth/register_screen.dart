@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/auth_service.dart';
+import 'package:tiktok_app_poly/views/pages/RULES/policy_creen.dart';
+import 'package:tiktok_app_poly/views/pages/RULES/rules_screen.dart';
 
-// ignore: must_be_immutable
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   RegisterScreen({Key? key}) : super(key: key);
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  // final _registerFormKey = GlobalKey<FormState>();
+  bool showPassword = false;
+  bool showconfirmPassword = false;
 
   bool isValidEmail(String email) {
     return RegExp(
@@ -17,7 +25,7 @@ class RegisterScreen extends StatelessWidget {
   }
 
   String? validateEmail(String value) {
-    if (value == '') {
+    if (value.isEmpty) {
       return "Empty Field !";
     } else if (!isValidEmail(value)) {
       return "Wrong Email !";
@@ -29,39 +37,28 @@ class RegisterScreen extends StatelessWidget {
   doRegister(BuildContext context) {
     if (validate()) {
       AuthService.registerFetch(
-          context: context,
-          email: emailController.text,
-          password: passwordController.text,
-          fullName: nameController.text,
-          uid: '');
+        context: context,
+        email: emailController.text,
+        password: passwordController.text,
+        fullName: nameController.text,
+        uid: '',
+      );
     }
   }
 
   bool validate() {
-    if (nameController.text.isNotEmpty &&
+    return nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty) {
-      return true;
-    }
-    return false;
+        confirmPasswordController.text.isNotEmpty &&
+        passwordController.text == confirmPasswordController.text;
   }
 
   String? validatePassword(String value) {
-    if (value == '') {
+    if (value.isEmpty) {
       return "Empty Field !";
     } else if (value.length <= 5) {
-      return "Your password is so short !";
-    } else {
-      return null;
-    }
-  }
-
-  String? validateConfirmPassword(String value) {
-    if (value == '') {
-      return "Empty Field !";
-    } else if (value != passwordController.text) {
-      return "Your confirmation password does not match !";
+      return "Your password is too short !";
     } else {
       return null;
     }
@@ -98,9 +95,59 @@ class RegisterScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                 ),
-                child: const Text("Confirm"),
+                child: const Text("Đăng Ký Ngay"),
               ),
-            )
+            ),
+            Container(
+              margin:
+                  EdgeInsets.only(top: 100, left: 20, right: 20, bottom: 20),
+              child: Column(
+                children: [
+                  const Text(
+                    'Bằng Cách nhấn Đăng Ký Ngay bạn đồng ý với',
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                  Container(
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RulesScreen()));
+
+                              print('Hướng Trang điều khoản dịch vụ');
+                            },
+                            child: Text('Điều Khoản dịch vụ',
+                                style: TextStyle(
+                                    color:
+                                        const Color.fromARGB(255, 16, 16, 16))),
+                          ),
+                          Text(
+                            'và',
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PolicyScreen()));
+                            },
+                            child: Text('Chính Sách Bảo Mật',
+                                style: TextStyle(
+                                    color: const Color.fromARGB(255, 0, 0, 0))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -113,43 +160,118 @@ class RegisterScreen extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              margin: EdgeInsets.symmetric(vertical: 20),
-              child: const Text(
-                'Sign up for TikTok',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              )),
-          TextField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Full name",
+            margin: EdgeInsets.symmetric(vertical: 20),
+            child: const Text(
+              'Sign up for TikTok',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Container(
+            height: 50.0, // Điều chỉnh chiều cao của Container
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "Name",
+                border: InputBorder.none,
+              ),
+              obscureText: !showPassword,
             ),
           ),
           const SizedBox(height: 20),
-          TextField(
-            controller: emailController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Email",
+          Container(
+            height: 50.0, // Điều chỉnh chiều cao của Container
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            child: TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "Email",
+                border: InputBorder.none,
+              ),
+              obscureText: !showPassword,
             ),
           ),
           const SizedBox(height: 20),
-          TextField(
-            controller: passwordController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Password",
+          Container(
+            height: 50.0, // Điều chỉnh chiều cao của Container
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
             ),
-            obscureText: true,
+            child: TextField(
+              controller: passwordController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "Password",
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    showPassword ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                ),
+              ),
+              obscureText: !showPassword,
+            ),
           ),
           const SizedBox(height: 20),
-          TextField(
-            controller: confirmPasswordController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 15.0),
-              hintText: "Confirm Password",
+          Container(
+            height: 50.0, // Điều chỉnh chiều cao của Container
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
+                width: 0.5,
+              ),
+              borderRadius: BorderRadius.circular(15.0),
             ),
-            obscureText: true,
+            child: TextField(
+              controller: confirmPasswordController,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                hintText: "ConfirmPass",
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    showconfirmPassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      showconfirmPassword = !showconfirmPassword;
+                    });
+                  },
+                ),
+              ),
+              obscureText: !showconfirmPassword,
+            ),
           ),
         ],
       ),

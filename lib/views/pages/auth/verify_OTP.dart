@@ -94,34 +94,35 @@ class VerifyOTP extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            // Visibility(
-            //   visible: context
-            //       .watch<LoginPhoneProvider>()
-            //       .isErrorSms,
-            //   child:  Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 15),
-            //     child: Text("Confirm",
-            //       style: TextStyle(color: Colors.red,
-            //         fontWeight: FontWeight.w500,
-            //         fontSize: 16,),
-            //       textAlign: TextAlign.left,
-            //     ),
-            //   ),
-            // ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                onPressed: () {
-                  Provider.of<LoginPhoneProvider>(context, listen: true)
-                      .verify(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+            Visibility(
+              visible: context.watch<LoginPhoneProvider>().isErrorSms,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  "Confirm",
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                child: const Text("Confirm"),
               ),
-            )
+            ),
+            // Container(
+            //   margin: EdgeInsets.symmetric(horizontal: 15),
+            //   width: MediaQuery.of(context).size.width,
+            //   child: ElevatedButton(
+            //     onPressed: () {
+            //       Provider.of<LoginPhoneProvider>(context, listen: true)
+            //           .verify(context);
+            //     },
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.redAccent,
+            //     ),
+            //     child: const Text("Confirm"),
+            //   ),
+            // )
           ],
         ),
       ),

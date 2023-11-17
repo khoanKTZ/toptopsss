@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/views/pages/home/home_screen.dart';
+import 'package:tiktok_app_poly/views/widgets/snackbar.dart';
 
 // ignore: must_be_immutable
 class RegisterPhoneScreen extends StatelessWidget {
@@ -8,22 +10,27 @@ class RegisterPhoneScreen extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  // final _registerFormKey = GlobalKey<FormState>();
+  final _registerFormKey = GlobalKey<FormState>();
 
   doRegister(BuildContext context) {
-    if (validate()) {
-      // context:
-      // context;
-      // email:
-      // '';
-      // password:
-      // '';
+    // if (validate()) {
+    //   context:
+    //   context;
+    //   email:
+    //   '';
+    //   password:
+    //   '';
 
-      // fullName:
-      // nameController.text;
-      // uid:
-      // uid;
-    }
+    //   fullName:
+    //   nameController.text;
+    //   uid:
+    //   uid;
+    // }
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    getSnackBar(
+        'Login', 'Login Thành công', const Color.fromARGB(255, 254, 4, 4));
+    print('Đã nhấp xxxxxx');
   }
 
   bool validate() {

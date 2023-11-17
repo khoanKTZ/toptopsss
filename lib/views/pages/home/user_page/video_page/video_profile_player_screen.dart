@@ -283,10 +283,16 @@ class VideoProfileScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      CircleAnimation(
-                                        child:
-                                            buildMusicAlbum(item.profilePhoto),
-                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print(
+                                              "Đã click vào CircleAnimation profile");
+                                        },
+                                        child: CircleAnimation(
+                                          child: buildMusicAlbum(
+                                              item.profilePhoto),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),

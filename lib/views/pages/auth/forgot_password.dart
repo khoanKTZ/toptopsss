@@ -100,16 +100,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             width: 330,
             child: Row(
               children: [
-                Radio(
-                  value: emailRadioValue,
-                  groupValue: true,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      emailRadioValue = true;
-                      phoneRadioValue = false;
-                    });
-                  },
-                ),
+                // Radio(
+                //   value: emailRadioValue,
+                //   groupValue: true,
+                //   onChanged: (bool? newValue) {
+                //     setState(() {
+                //       emailRadioValue = true;
+                //       phoneRadioValue = false;
+                //     });
+                //   },
+                // ),
                 Expanded(
                   child: Container(
                     height: 50,
@@ -165,7 +165,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               right: 1,
             ),
             child: Container(
-              margin: EdgeInsets.only(top: 250, left: 20, right: 20),
+              margin:
+                  EdgeInsets.only(top: 200, left: 20, right: 20, bottom: 20),
               child: Container(
                 child: Column(
                   children: [
@@ -180,32 +181,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.height * 0.1),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Điều Khoản Sử Dụng    |',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 16, 16, 16),
-                              ),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('Điều Khoản Sử Dụng    |',
+                                  style: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 16, 16, 16))),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'Chính Sách Riêng Tư',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('Chính Sách Riêng Tư',
+                                  style: TextStyle(
+                                      color:
+                                          const Color.fromARGB(255, 0, 0, 0))),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
