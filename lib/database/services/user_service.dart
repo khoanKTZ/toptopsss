@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/EditProfile.dart';
 
 import '../../views/widgets/snackbar.dart';
@@ -144,8 +145,9 @@ class UserService {
 
   static Future<void> follow(String uid) async {
     String currentUid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot docUser =
+    await FirebaseFirestore.instance.collection('users').doc(uid).get();
     print("$currentUid++++$uid");
-
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('users')
         .doc(currentUid)
@@ -167,10 +169,16 @@ class UserService {
           .update({
         'following': FieldValue.arrayUnion([uid]),
       });
-
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'follower': FieldValue.arrayUnion([currentUid]),
       });
+      NotificationsService().sendNotification(
+          uiDuser: doc.get('uid').toString(),
+          title: "Chào bạn",
+          body:
+          'Bạn vừa nhận 1 lượt follow từ ${(docUser.data()! as dynamic)['fullName']}',
+          idOther: uid.toString(),
+          avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
     }
   }
 }

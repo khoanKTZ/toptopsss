@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 
 class VideoServices {
   static likeVideo(String id) async {
     DocumentSnapshot doc =
         await FirebaseFirestore.instance.collection('videos').doc(id).get();
     String? uid = FirebaseAuth.instance.currentUser?.uid;
+    DocumentSnapshot docUser =
+    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    print(docUser.data().toString());
     if ((doc.data()! as dynamic)['likes'].contains(uid)) {
       await FirebaseFirestore.instance.collection('videos').doc(id).update({
         'likes': FieldValue.arrayRemove([uid]),
@@ -15,6 +19,13 @@ class VideoServices {
       await FirebaseFirestore.instance.collection('videos').doc(id).update({
         'likes': FieldValue.arrayUnion([uid]),
       });
+      NotificationsService().sendNotification(
+          uiDuser: doc.get('uid').toString(),
+          title: "Chào bạn",
+          body:
+          'Bạn vừa nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
+          idOther: uid.toString(),
+          avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
     }
   }
 
@@ -26,6 +37,8 @@ class VideoServices {
         .doc(commentId)
         .get();
     String? uid = FirebaseAuth.instance.currentUser?.uid;
+    DocumentSnapshot docUser =
+    await FirebaseFirestore.instance.collection('users').doc(uid).get();
     if ((doc.data()! as dynamic)['likes'].contains(uid)) {
       await FirebaseFirestore.instance
           .collection('videos')
@@ -87,6 +100,8 @@ class VideoServices {
       required message,
       required uid,
       required videoID}) async {
+    DocumentSnapshot doc =
+    await FirebaseFirestore.instance.collection('videos').doc(videoID).get();
     final CollectionReference users =
         FirebaseFirestore.instance.collection('users');
     CollectionReference videos =
@@ -110,6 +125,15 @@ class VideoServices {
       'id': 'Comment $len',
       'likes': []
     }).then((value) async {});
+    DocumentSnapshot docUser =
+    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    NotificationsService().sendNotification(
+        uiDuser: doc.get('uid').toString(),
+        title: "Chào bạn",
+        body:
+        'Bạn vừa nhận 1 lượt comment từ ${(docUser.data()! as dynamic)['fullName']}',
+        idOther: uid.toString(),
+        avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
   }
 
   static RepComment(

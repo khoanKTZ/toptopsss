@@ -19,6 +19,8 @@ class AuthService {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      NotificationsService().requestPermission();
+      NotificationsService().getToken();
       final storage = FlutterSecureStorage();
       String? uID = userCredential.user?.uid.toString();
       await storage.write(key: 'uID', value: uID);
@@ -28,7 +30,7 @@ class AuthService {
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
           (route) => false);
-      NotifiService().showNotification(title: "thông báo",body: "đăng nhập thành công");
+      // NotifiService().showNotification(title: "thông báo",body: "đăng nhập thành công");
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         getSnackBar(
@@ -85,6 +87,8 @@ class AuthService {
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
+      NotificationsService().requestPermission();
+      NotificationsService().getToken();
       getSnackBar(
         'Register',
         'Register Success.',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/views/pages/home/Notification/notifi.dart';
 import 'package:tiktok_app_poly/views/pages/home/chat_page/chat_screen.dart';
 import 'package:tiktok_app_poly/views/pages/home/user_page/user_screen.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _list = [
     VideoScreen(),
     ChatScreen(),
-    const Notification_Screen(),
+    const NotificationScreen(),
     const UserInfoScreen(),
   ];
 

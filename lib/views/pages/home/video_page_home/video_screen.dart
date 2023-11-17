@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/models/video_model.dart';
+import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/user_service.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/show_comment.dart';
 import 'package:tiktok_app_poly/views/pages/home/shearch/shearch_video_screen.dart';
@@ -16,12 +17,28 @@ import '../../../widgets/video_player_item.dart';
 import '../user_page/people_detail_screen.dart';
 
 // ignore: must_be_immutable
-class VideoScreen extends StatelessWidget {
+class VideoScreen extends StatefulWidget {
   VideoScreen({Key? key}) : super(key: key);
+  @override
+  State<VideoScreen> createState() => _VideoScreenState();
+}
+
+class _VideoScreenState extends State<VideoScreen> {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+
+  final notification = NotificationsService();
+  @override
+  void initState() {
+    super.initState();
+    notification.initLocalNotification();
+  }
+
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
+
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
+
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
   List<dynamic> list = [''];
 
@@ -41,7 +58,7 @@ class VideoScreen extends StatelessWidget {
   }
 
   buildProfile(
-      BuildContext context, String profilePhoto, String id, String videoUid) {
+      BuildContext context, String profilePhoto, String id) {
     return SizedBox(
       width: 60,
       height: 60,
@@ -81,7 +98,7 @@ class VideoScreen extends StatelessWidget {
                 return const SizedBox();
               }
               bool isFollowing =
-                  snapshot.data!.get('following').contains(videoUid);
+                  snapshot.data!.get('following').contains(id);
               return Positioned(
                 left: 20,
                 bottom: 0,
@@ -91,7 +108,7 @@ class VideoScreen extends StatelessWidget {
                     onTap: () async {
                       if (!isFollowing) {
                         await UserService.follow(
-                            videoUid); // Function to follow a user
+                            id); // Function to follow a user
                       }
                     },
                     child: Container(
@@ -339,7 +356,7 @@ class VideoScreen extends StatelessWidget {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     buildProfile(context, item.profilePhoto,
-                                        item.uid, item.uid),
+                                        item.uid),
                                     Column(
                                       children: [
                                         InkWell(
