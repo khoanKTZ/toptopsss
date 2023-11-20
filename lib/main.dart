@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    notification.initLocalNotification();
+    notification.firebaseNotification(context);
   }
 
   @override

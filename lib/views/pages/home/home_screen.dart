@@ -16,6 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final notification = NotificationsService();
   var _tabIndex = 0;
   final List<Widget> _list = [
     VideoScreen(),
@@ -33,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override

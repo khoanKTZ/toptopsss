@@ -85,6 +85,7 @@ class NotificationsService {
 
   void firebaseNotification(context) {
     try {
+      initLocalNotification();
       FirebaseMessaging.onMessageOpenedApp.listen((event) async {
         await Navigator.of(context).push(
           MaterialPageRoute(
@@ -152,7 +153,7 @@ class NotificationsService {
               'Authorization': 'key=$key',
             },
             body: jsonEncode(<String, dynamic>{
-              "to": token,
+              'to': token,
               'priority': 'high',
               'notification': <String, dynamic>{
                 'body': body,
