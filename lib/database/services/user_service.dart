@@ -146,7 +146,7 @@ class UserService {
   static Future<void> follow(String uid) async {
     String currentUid = FirebaseAuth.instance.currentUser!.uid;
     DocumentSnapshot docUser =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(currentUid).get();
     print("$currentUid++++$uid");
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('users')
@@ -173,12 +173,12 @@ class UserService {
         'follower': FieldValue.arrayUnion([currentUid]),
       });
       NotificationsService().sendNotification(
-          uiDuser: doc.get('uid').toString(),
+          uidNd: uid,
           title: "Chào bạn",
-          body:
-          'Bạn vừa nhận 1 lượt follow từ ${(docUser.data()! as dynamic)['fullName']}',
-          idOther: uid.toString(),
-          avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
-    }
+          body: 'Bạn nhận 1 lượt follow từ ${(docUser.data()! as dynamic)['fullName']}',
+          idOther: currentUid,
+          avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',
+          cretory: 'follow');
+     }
   }
 }

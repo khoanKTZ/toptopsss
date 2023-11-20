@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/views/pages/home/Notification/notifi.dart';
@@ -27,6 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _tabIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
   }
 
   @override

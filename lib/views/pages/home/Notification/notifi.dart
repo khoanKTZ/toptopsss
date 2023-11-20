@@ -1,6 +1,6 @@
-import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,12 +15,7 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   final notification = NotificationsService();
-  @override
-  void initState() {
-    super.initState();
-    notification.initLocalNotification();
-  }
-
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,8 +33,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     children: [
                       Text(
                         'Hộp thư',
-                        style:
-                        TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 20),
                       ),
                       Icon(
                         Icons.notifications,
@@ -61,7 +56,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    print("thông tin ===================================${snapshot.data!.docs.length}");
+                    print(
+                        "thông tin ===================================${snapshot.data!.docs.length}");
                     return ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
@@ -103,6 +99,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     style: const TextStyle(
                                       color: Color(0xff666666),
                                       fontSize: 13,
+                                    ),
+                                  ),
+                                  Text(
+                                    item['time'] == null
+                                        ? DateTime.now()
+                                        .toString()
+                                        : DateFormat.yMMMd()
+                                        .add_jm()
+                                        .format(
+                                        item['time']
+                                            .toDate()),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black38,
                                     ),
                                   ),
                                 ],

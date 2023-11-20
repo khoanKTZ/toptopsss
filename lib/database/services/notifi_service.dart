@@ -10,13 +10,14 @@ import 'package:http/http.dart' as http;
 import 'package:tiktok_app_poly/views/pages/home/Notification/notifi.dart';
 
 class NotificationsService {
-  static const key = 'AAAADwV1u20:APA91bFdjV0QuGcO6cCwD8ydwhQLFp3U9NQbjMGJ-IaCsFDm_LQeOS59Wp9ROaDNeYy0zEOzX8QCZwukHSxf5pwt75SbMJwU0D4hpwdpbpt7hZth29TvaqZKWXMhBkuM88fFG2QJowau';
+  static const key =
+      'AAAADwV1u20:APA91bFdjV0QuGcO6cCwD8ydwhQLFp3U9NQbjMGJ-IaCsFDm_LQeOS59Wp9ROaDNeYy0zEOzX8QCZwukHSxf5pwt75SbMJwU0D4hpwdpbpt7hZth29TvaqZKWXMhBkuM88fFG2QJowau';
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   void initLocalNotification() {
     try {
       const androidSettings =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+          AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings(
           requestAlertPermission: true,
           requestBadgePermission: true,
@@ -24,7 +25,7 @@ class NotificationsService {
           requestSoundPermission: true);
 
       const initializationSettings =
-      InitializationSettings(android: androidSettings, iOS: iosSettings);
+          InitializationSettings(android: androidSettings, iOS: iosSettings);
 
       flutterLocalNotificationsPlugin.initialize(
         initializationSettings,
@@ -111,14 +112,14 @@ class NotificationsService {
 
       final androidDetails = AndroidNotificationDetails(
           'com.example.tiktok_app_poly',
-          importance: Importance.max, 'mychannelid',
+          importance: Importance.max,
+          'mychannelid',
           styleInformation: styleInformation,
           priority: Priority.max,
           largeIcon: senderAvatarUrl);
 
       const iosDetails =
-      DarwinNotificationDetails(presentAlert: true, presentBadge: true);
-
+          DarwinNotificationDetails(presentAlert: true, presentBadge: true);
       final notificaltionDetails = NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
@@ -131,43 +132,49 @@ class NotificationsService {
     }
   }
 
-  Future<void> sendNotification({required String uiDuser,
-    required String title,
-    required String body,
-    required String idOther,
-    required String avartarUrl}) async {
-    print('dô đây r');
-    String token = await getReceiverToken(idOther);
-    String uid = FirebaseAuth.instance.currentUser!.uid;
+  Future<void> sendNotification(
+      {required String uidNd,
+      required String title,
+      required String body,
+      required String idOther,
+      required String avartarUrl,
+      required String cretory}) async {
     print('đến đây r');
+    String token = await getReceiverToken(uidNd);
+    print(token.toString());
+    String uid = FirebaseAuth.instance.currentUser!.uid;
     try {
-      await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'key=$key',
-        },
-        body: jsonEncode(<String, dynamic>{
-          "to": token,
-          'priority': 'high',
-          'notification': <String, dynamic>{
-            'body': body,
-            'title': title,
-          },
-          'data': <String, String>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'status': 'done',
-            'senderId': uid,
-          }
-        }),
-      ).then((value) {},);
-      print('chuẩn bị thêm');
+      await http
+          .post(
+            Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': 'key=$key',
+            },
+            body: jsonEncode(<String, dynamic>{
+              "to": token,
+              'priority': 'high',
+              'notification': <String, dynamic>{
+                'body': body,
+                'title': title,
+              },
+              'data': <String, String>{
+                'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                'status': 'done',
+                'senderId': uid,
+              }
+            }),
+          )
+          .then(
+            (value) {},
+          );
       await addNotification(
-          uiD: uiDuser,
+          uiD: uidNd,
           content: body,
           idUser: idOther,
           title: title,
-          avartarUrl: avartarUrl);
+          avartarUrl: avartarUrl,
+          cretory: cretory);
       print('thành công=======================');
     } catch (e) {
       print('Lỗi ==========================');
@@ -176,27 +183,32 @@ class NotificationsService {
   }
 
 
-  static addNotification({ required String uiD,
-    required String idUser,
-    required String title,
-    required String content,
-    required String avartarUrl}) async {
+  static addNotification(
+      {required String uiD,
+      required String idUser,
+      required String title,
+      required String content,
+      required String avartarUrl,
+      required String cretory}) async {
     print('thêm');
     CollectionReference notifications =
-    FirebaseFirestore.instance.collection('notifications');
+        FirebaseFirestore.instance.collection('notifications');
     try {
       DateTime currentTime = DateTime.now();
       await notifications.add({
-      'uid': uiD,
-      'title': title,
-      'content': content,
-      'idUser': idUser,
-      'time': currentTime,
-      'image': avartarUrl,
-      'check':0
+        'uid': uiD,
+        'title': title,
+        'content': content,
+        'idUser': idUser,
+        'time': currentTime,
+        'image': avartarUrl,
+        'cretory': cretory,
+        'check': 0
       }).then((value) => print("User Added"));
     } catch (e) {
       print('Lỗi khi thêm thông báo: $e');
     }
   }
+
+  static editCheckNotiShow({required int check}) {}
 }

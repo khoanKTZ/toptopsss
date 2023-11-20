@@ -20,12 +20,12 @@ class VideoServices {
         'likes': FieldValue.arrayUnion([uid]),
       });
       NotificationsService().sendNotification(
-          uiDuser: doc.get('uid').toString(),
+          uidNd: doc.get('uid').toString(),
           title: "Chào bạn",
           body:
-          'Bạn vừa nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
+          'Bạn nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
           idOther: uid.toString(),
-          avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
+          avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',cretory: 'likeVideo');
     }
   }
 
@@ -125,15 +125,6 @@ class VideoServices {
       'id': 'Comment $len',
       'likes': []
     }).then((value) async {});
-    DocumentSnapshot docUser =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
-    NotificationsService().sendNotification(
-        uiDuser: doc.get('uid').toString(),
-        title: "Chào bạn",
-        body:
-        'Bạn vừa nhận 1 lượt comment từ ${(docUser.data()! as dynamic)['fullName']}',
-        idOther: uid.toString(),
-        avartarUrl: '${(docUser.data()! as dynamic)['avartarURL']}');
   }
 
   static RepComment(
