@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:tiktok_app_poly/provider/notifi_model_check.dart';
 import 'package:tiktok_app_poly/views/pages/home/camera_page/camera_screen.dart';
 
 // ignore: must_be_immutable
-class CustomAnimatedBottomBar extends StatelessWidget {
+class CustomAnimatedBottomBar extends StatefulWidget {
   CustomAnimatedBottomBar({
     Key? key,
     required this.selectedScreenIndex,
@@ -12,7 +16,16 @@ class CustomAnimatedBottomBar extends StatelessWidget {
 
   final int selectedScreenIndex;
   final Function onItemTap;
-  bool _isNavigating = false; // Flag to control navigation
+
+  @override
+  State<CustomAnimatedBottomBar> createState() =>
+      _CustomAnimatedBottomBarState();
+}
+
+class _CustomAnimatedBottomBarState extends State<CustomAnimatedBottomBar> {
+  bool _isNavigating = false;
+
+  // Flag to control navigation
   @override
   Widget build(BuildContext context) {
     var style = Theme.of(context)
@@ -22,7 +35,7 @@ class CustomAnimatedBottomBar extends StatelessWidget {
     var barHeight = MediaQuery.of(context).size.height * 0.06;
     return BottomAppBar(
       child: Container(
-        color: selectedScreenIndex == 0 ? Colors.black : Colors.white,
+        color: widget.selectedScreenIndex == 0 ? Colors.black : Colors.white,
         height: barHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -41,33 +54,74 @@ class CustomAnimatedBottomBar extends StatelessWidget {
 
   _bottomNavBarItem(
       int index, String label, TextStyle textStyle, String iconName) {
-    bool isSelected = selectedScreenIndex == index;
+    bool isSelected = widget.selectedScreenIndex == index;
     Color itemColor = isSelected ? Colors.black : Colors.grey;
-    if (isSelected && selectedScreenIndex == 0) {
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    int count = 0;
+    if (isSelected && widget.selectedScreenIndex == 0) {
       itemColor = Colors.white;
     }
-
-    return InkWell(
-      onTap: () => {onItemTap(index)},
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: SvgPicture.asset(
-              "assets/icons/${isSelected ? '${iconName}_filled' : iconName}.svg",
-              color: itemColor,
+    CollectionReference notifi =
+        FirebaseFirestore.instance.collection('notifications');
+    return ChangeNotifierProvider<NotifiCheck>(
+      create: (context) => NotifiCheck(),
+      child: InkWell(
+        onTap: () => {widget.onItemTap(index)},
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  "assets/icons/${isSelected ? '${iconName}_filled' : iconName}.svg",
+                  color: itemColor,
+                ),
+              ),
+              if (label == 'Notification')
+                Consumer<NotifiCheck>(
+                  builder: (context, value, child) {
+                    return StreamBuilder<QuerySnapshot>(
+                        stream: notifi.where('uid', whereIn: [uid]).snapshots(),
+                        builder: (BuildContextcontext,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                            final item = snapshot.data!.docs[i];
+                            if (item['check'] == 0) {
+                              count += 1;
+                            }
+                          }
+                          if (snapshot.hasData) {
+                            if(count == 0){
+                              value.changerNoti(false);
+                            }else{
+                              value.changerNoti(true);
+                            }
+                            return value.isNoti ? Positioned(
+                                top: 1,
+                                right: 1,
+                                child: Icon(
+                                  Icons.circle_sharp,
+                                  color: Colors.red,
+                                  size: 10,
+                                )) : Container();
+                          } else {
+                            return Container();
+                          }
+                        });
+                  },
+                )
+            ]),
+            const SizedBox(
+              height: 3,
             ),
-          ),
-          const SizedBox(
-            height: 3,
-          ),
-          Text(
-            label,
-            style: textStyle.copyWith(color: itemColor, fontSize: 10),
-          )
-        ],
+            Text(
+              label,
+              style: textStyle.copyWith(color: itemColor, fontSize: 10),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -101,11 +155,14 @@ class CustomAnimatedBottomBar extends StatelessWidget {
             width: 40,
             height: barHeight - 15,
             decoration: BoxDecoration(
-                color: selectedScreenIndex == 0 ? Colors.white : Colors.black,
+                color: widget.selectedScreenIndex == 0
+                    ? Colors.white
+                    : Colors.black,
                 borderRadius: BorderRadius.circular(8)),
             child: Icon(
               Icons.add,
-              color: selectedScreenIndex == 0 ? Colors.black : Colors.white,
+              color:
+                  widget.selectedScreenIndex == 0 ? Colors.black : Colors.white,
             ),
           ),
         ),

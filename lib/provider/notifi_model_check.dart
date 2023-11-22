@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 class NotifiCheck extends ChangeNotifier{
 
   bool isCheckNoti;
+  bool isNoti;
 
-  NotifiCheck({this.isCheckNoti = false});
+  NotifiCheck({
+    this.isCheckNoti = false,
+    this.isNoti = false,
+  });
+
 
   changerNotifiCheck(int a){
     if(a == 0){
@@ -15,5 +20,9 @@ class NotifiCheck extends ChangeNotifier{
     notifyListeners();
   }
 
+  changerNoti(bool check){
+    isNoti = check;
+    notifyListeners();
+  }
 
 }

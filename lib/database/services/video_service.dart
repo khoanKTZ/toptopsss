@@ -22,9 +22,8 @@ class VideoServices {
       NotificationsService().sendNotification(
           uidNd: doc.get('uid').toString(),
           title: "Chào bạn",
-          body:
-          'Bạn nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
-          idOther: uid.toString(),
+          body: 'Bạn nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
+          idOther: doc.get('id').toString(),
           avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',cretory: 'likeVideo');
     }
   }

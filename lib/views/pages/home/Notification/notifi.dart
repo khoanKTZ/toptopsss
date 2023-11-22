@@ -7,6 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/provider/notifi_model_check.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/fllower/follower_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/people_detail_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/user_page/video_page/video_profile_player_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -18,7 +21,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final notification = NotificationsService();
   String? uid = FirebaseAuth.instance.currentUser?.uid;
-
+  int Count = 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -70,6 +73,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
+                                if(item['cretory'] == 'follow')Navigator.push(context, MaterialPageRoute(builder: (context) => PeopleInfoScreen(peopleID: item['idUser']),));
+                                if(item['cretory'] == 'likeVideo')Navigator.push(context, MaterialPageRoute(builder: (context) => VideoProfileScreen(videoID: item['idUser']),));
                                 NotificationsService.editCheckNotiShow(context: context,id: item.id);
                               });
                             },
