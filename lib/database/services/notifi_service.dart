@@ -6,8 +6,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:tiktok_app_poly/views/pages/home/Notification/notifi.dart';
+import 'package:tiktok_app_poly/views/widgets/snackbar.dart';
 
 class NotificationsService {
   static const key =
@@ -183,7 +185,6 @@ class NotificationsService {
     }
   }
 
-
   static addNotification(
       {required String uiD,
       required String idUser,
@@ -211,5 +212,19 @@ class NotificationsService {
     }
   }
 
-  static editCheckNotiShow({required int check}) {}
+  static editCheckNotiShow(
+      {required BuildContext context,required String id}) async {
+    try {
+      CollectionReference noti =
+          FirebaseFirestore.instance.collection('notifications');
+      noti.doc(id)
+          .update({
+            'check': 1,
+          })
+          .then((value) => print("Updated"))
+          .catchError((error) => print("Failed to update noti: $error"));
+    } catch (e) {}
+  }
+
+  static CheckNotiShow({required int id}) {}
 }

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
 import 'package:tiktok_app_poly/provider/comment_model.dart';
 

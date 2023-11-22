@@ -20,6 +20,8 @@ class VideoProfileScreen extends StatelessWidget {
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
+
+
   buildProfile(String profilePhoto) {
     return SizedBox(
       width: 60,
