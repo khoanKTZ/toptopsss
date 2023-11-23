@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId "com.example.tiktok_app_poly"
         // minSdkVersion flutter.minSdkVersion
-        minSdkVersion 24
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

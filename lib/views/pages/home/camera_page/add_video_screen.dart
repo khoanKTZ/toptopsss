@@ -50,10 +50,38 @@ class AddVideoScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                            255, 51, 52, 52), // Màu nền của nút
+                        borderRadius:
+                            BorderRadius.circular(10), // Độ cong của góc
+                      ),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          print('add music on video');
+                        },
+                        icon: Icon(
+                          Icons.music_note,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          'Thêm âm thanh',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white
+                              // Màu chữ của nút
+                              ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 2 / 3,
                       height: MediaQuery.of(context).size.height / 2,
-                      child: VideoPlayerItem(context: context,
+                      child: VideoPlayerItem(
+                        context: context,
                         videoUrl: videoPath,
                       ),
                     ),

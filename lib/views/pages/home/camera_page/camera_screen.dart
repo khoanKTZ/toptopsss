@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tiktok_app_poly/views/pages/home/music/loadmusic_screen.dart';
 
 import 'add_video_screen.dart';
 
@@ -72,21 +74,106 @@ class _CameraScreenState extends State<CameraScreen> {
           child: Column(
             children: [
               Expanded(
-                  child: Stack(
-                children: [
-                  Positioned.fill(child: CameraPreview(cameraController!)),
-                  if (isRecording)
-                    Align(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CameraPreview(cameraController!),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                                print('Icon đã được nhấn');
+                              },
+                              child: const Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.cancel,
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      size: 40,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                print('Làm đẹp');
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.perm_identity_outlined,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  size: 40,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                print('Flassss');
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.flash_on,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  size: 40,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                print('music');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoadMusicScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  CupertinoIcons.double_music_note,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    if (isRecording)
+                      Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                            padding: const EdgeInsets.only(top: 16, right: 16),
-                            child: Icon(
-                              isPause ? Icons.pause : Icons.circle,
-                              color: isPause ? Colors.white : Colors.red,
-                              size: 32,
-                            )))
-                ],
-              )),
+                          padding: const EdgeInsets.only(top: 16, right: 16),
+                          child: Icon(
+                            isPause ? Icons.pause : Icons.circle,
+                            color: isPause ? Colors.white : Colors.red,
+                            size: 32,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
               Container(
                 color: Colors.black,
                 padding:
@@ -184,16 +271,18 @@ class _CameraScreenState extends State<CameraScreen> {
                       ],
                     ),
                     Align(
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                            onTap: () {
-                              pickVideo(ImageSource.gallery, context);
-                            },
-                            child: const Icon(
-                              Icons.photo,
-                              color: Colors.white,
-                              size: 40,
-                            )))
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          pickVideo(ImageSource.gallery, context);
+                        },
+                        child: const Icon(
+                          Icons.photo,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )

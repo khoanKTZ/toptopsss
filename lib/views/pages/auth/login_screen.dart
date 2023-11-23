@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/auth_service.dart';
 import 'package:tiktok_app_poly/views/pages/auth/forgot_password.dart';
+import 'package:tiktok_app_poly/views/pages/admin/admin.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -30,11 +31,22 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (emailErrorText == null && passwordErrorText == null) {
-      AuthService.loginFetch(
-        context: context,
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      String enteredEmail = emailController.text;
+      String enteredPassword = passwordController.text;
+
+      if (enteredEmail == "admynkhoan@gmail.com" &&
+          enteredPassword == "Khoan292003") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const admin()),
+        );
+      } else {
+        AuthService.loginFetch(
+          context: context,
+          email: enteredEmail,
+          password: enteredPassword,
+        );
+      }
     }
   }
 
@@ -44,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (!isValidEmail(emailController.text)) {
       return "Invalid email format!";
     }
-    return null;
+    return null; // Trả về null nếu không có lỗi
   }
 
   String? validatePassword() {
@@ -87,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: const InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
-                hintText: "Email....",
+                hintText: "Email",
                 border: InputBorder
                     .none, // Để loại bỏ đường viền mặc định của TextField
               ),
@@ -113,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
-                hintText: "Password....",
+                hintText: "Password",
                 border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(

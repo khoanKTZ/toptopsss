@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tiktok_app_poly/views/pages/auth/register_screen.dart';
+import 'package:tiktok_app_poly/views/pages/home/home_screen.dart';
 import 'package:tiktok_app_poly/views/widgets/button_style_login.dart';
 
 class LoginAll extends StatefulWidget {
@@ -10,6 +12,25 @@ class LoginAll extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginAll> {
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus(); // Kiểm tra trạng thái đăng nhập khi màn hình được tạo
+  }
+
+  Future<void> checkLoginStatus() async {
+    final storage = FlutterSecureStorage();
+    final uID = await storage.read(key: 'uID');
+    if (uID != null) {
+      // Nếu đã đăng nhập trước đó, chuyển hướng đến HomeScreen
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
