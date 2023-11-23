@@ -34,10 +34,10 @@ showLogoutDialog(BuildContext context) {
     context: context,
     builder: (context) => SimpleDialog(
       children: [
-        Center(
+        const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 'Log out',
                 style: TextStyle(
@@ -58,8 +58,8 @@ showLogoutDialog(BuildContext context) {
               onPressed: () {
                 AuthService.Logout(context: context);
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(
                     Icons.done,
                     color: Color.fromARGB(255, 0, 0, 0),

@@ -65,12 +65,22 @@ dependencies:
   flutter_facebook_auth: ^5.0.11
   firebase_messaging: ^14.7.4
   http: ^0.13.6
-  marquee: ^2.2.3
   file_picker: ^6.1.1
+  video_editor: ^3.0.0
+  audioplayers: ^5.2.1
+  flutter_launcher_icons: ^0.13.1
+ 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon.png"
+
 
   flutter_lints: ^2.0.0
 
