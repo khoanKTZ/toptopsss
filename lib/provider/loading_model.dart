@@ -36,4 +36,5 @@ class LoadingModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 }

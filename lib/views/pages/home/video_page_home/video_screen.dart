@@ -26,14 +26,6 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-
-  final notification = NotificationsService();
-  @override
-  void initState() {
-    super.initState();
-    notification.initLocalNotification();
-  }
-
   CollectionReference videos = FirebaseFirestore.instance.collection('videos');
 
   final CollectionReference users =

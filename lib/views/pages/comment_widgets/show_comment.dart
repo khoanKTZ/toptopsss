@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tiktok_app_poly/database/services/notifi_service.dart';
 import 'package:tiktok_app_poly/database/services/video_service.dart';
+import 'package:tiktok_app_poly/provider/comment_model.dart';
 import 'package:tiktok_app_poly/views/pages/comment_widgets/rep_comment_show.dart';
 import 'package:tiktok_app_poly/views/widgets/textf_comment.dart';
 
@@ -22,6 +24,10 @@ class _CommentItemState extends State<CommentItem> {
   TextEditingController _textEditingControllerup =
   TextEditingController();
  // Khai báo ở cấp độ lớp
+
+
+
+
   _showDialog(BuildContext context, String idexx,String value) {
     showDialog(
       context: context,
@@ -157,136 +163,139 @@ class _CommentItemState extends State<CommentItem> {
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (BuildContext context, int index) {
                               final item = snapshot.data!.docs[index];
-                              return Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              '${item['avatarURL']}'),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${item['userName']}',
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black38),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery
-                                                  .of(context)
-                                                  .size
-                                                  .width *
-                                                  3 /
-                                                  4,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  // Xử lý sự kiện khi chạm vào Text
-                                                  String indexite =
-                                                  item.get('id').toString();
-                                                  String idCheck =
-                                                  item.get('uID')
-                                                      .toString();
-                                                  if (widget.uid == idCheck) {
-                                                    _showDialog(
-                                                        context, indexite,item['content']);
-                                                  }
-                                                },
-                                                child: Text(
-                                                  '${item['content']}',
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Popins',
+                              return ChangeNotifierProvider<Cmodel>(
+                                create: (context) => Cmodel(),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                '${item['avatarURL']}'),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${item['userName']}',
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black38),
+                                              ),
+                                              SizedBox(
+                                                width: MediaQuery
+                                                    .of(context)
+                                                    .size
+                                                    .width *
+                                                    3 /
+                                                    4,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    // Xử lý sự kiện khi chạm vào Text
+                                                    String indexite =
+                                                    item.get('id').toString();
+                                                    String idCheck =
+                                                    item.get('uID')
+                                                        .toString();
+                                                    if (widget.uid == idCheck) {
+                                                      _showDialog(
+                                                          context, indexite,item['content']);
+                                                    }
+                                                  },
+                                                  child: Text(
+                                                    '${item['content']}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.black,
+                                                      fontFamily: 'Popins',
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  item['createdOn'] == null
-                                                      ? DateTime.now()
-                                                      .toString()
-                                                      : DateFormat.yMMMd()
-                                                      .add_jm()
-                                                      .format(
-                                                      item['createdOn']
-                                                          .toDate()),
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black38,
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 8),
-                                                // Khoảng cách giữa "Trả lời" và thời gian
-                                                GestureDetector(
-                                                  onTap: () =>
-                                                      _showRepCM(context,
-                                                          widget.videoID,
-                                                          item.get('id')),
-                                                  child: const Text(
-                                                    'Trả lời',
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    item['createdOn'] == null
+                                                        ? DateTime.now()
+                                                        .toString()
+                                                        : DateFormat.yMMMd()
+                                                        .add_jm()
+                                                        .format(
+                                                        item['createdOn']
+                                                            .toDate()),
                                                     style: const TextStyle(
                                                       fontSize: 12,
                                                       color: Colors.black38,
                                                     ),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        Padding(
-                                          padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                          child: Column(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  VideoServices.likeComment(
-                                                      widget.videoID, item['id']);
-                                                },
-                                                child: Icon(
-                                                  Icons.favorite,
-                                                  color: snapshot.data!
-                                                      .docs[index]['likes']
-                                                      .contains(widget.uid)
-                                                      ? Colors.red
-                                                      : Colors.grey,
-                                                ),
+                                                  const SizedBox(width: 8),
+                                                  // Khoảng cách giữa "Trả lời" và thời gian
+                                                  GestureDetector(
+                                                    onTap: () =>
+                                                        _showRepCM(context,
+                                                            widget.videoID,
+                                                            item.get('id')),
+                                                    child: const Text(
+                                                      'Trả lời',
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black38,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              Text('${item['likes']
-                                                  .length}'),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                          const Spacer(),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                            child: Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    VideoServices.likeComment(
+                                                        widget.videoID, item['id']);
+                                                  },
+                                                  child: Icon(
+                                                    Icons.favorite,
+                                                    color: snapshot.data!
+                                                        .docs[index]['likes']
+                                                        .contains(widget.uid)
+                                                        ? Colors.red
+                                                        : Colors.grey,
+                                                  ),
+                                                ),
+                                                Text('${item['likes']
+                                                    .length}'),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  RepCMW(
-                                    videoID: widget.videoID,
-                                    itemID: item['id'],
-                                    uid: widget.uid,
-                                  )
-                                ],
+                                    RepCMW(
+                                      videoID: widget.videoID,
+                                      itemID: item['id'],
+                                      uid: widget.uid,
+                                    )
+                                  ],
+                                ),
                               );
                             },
                           ),

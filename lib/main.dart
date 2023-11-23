@@ -13,10 +13,10 @@ import 'package:tiktok_app_poly/provider/save_model.dart';
 import 'package:tiktok_app_poly/provider/search_model.dart';
 import 'package:tiktok_app_poly/views/pages/auth/auth_screen.dart';
 import 'package:tiktok_app_poly/views/pages/auth/login_phone_screen.dart';
-import 'package:tiktok_app_poly/views/pages/admin/admin.dart';
 import 'package:tiktok_app_poly/views/pages/home/shearch/shearch_video_screen.dart';
 
 import 'firebase_options.dart';
+
 
 Future<void> _backgroundMessageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -90,9 +90,7 @@ class _MyAppState extends State<MyApp> {
             bodyMedium: const TextStyle(fontFamily: "Tiktok_Sans"),
             bodyLarge: const TextStyle(fontFamily: "Tiktok_Sans")),
       ),
-      home: admin(),
-      // home: LoginAll(),
-      // home: UpMusic(),
+      home: LoginAll(),
       // home: const ShearchVideo(),
       // home: TestAnimation(),
     );
