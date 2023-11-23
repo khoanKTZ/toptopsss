@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginAll> {
     final storage = FlutterSecureStorage();
     final uID = await storage.read(key: 'uID');
     if (uID != null) {
-      // Nếu đã đăng nhập trước đó, chuyển hướng đến HomeScreen
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
