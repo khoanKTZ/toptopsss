@@ -140,6 +140,7 @@ class NotificationsService {
       required String title,
       required String body,
       required String idOther,
+      required String idVideo,
       required String avartarUrl,
       required String cretory}) async {
     print('đến đây r');
@@ -176,6 +177,7 @@ class NotificationsService {
           content: body,
           idUser: idOther,
           title: title,
+          idvideo: idVideo,
           avartarUrl: avartarUrl,
           cretory: cretory);
       print('thành công=======================');
@@ -189,6 +191,7 @@ class NotificationsService {
       {required String uiD,
       required String idUser,
       required String title,
+      required String idvideo,
       required String content,
       required String avartarUrl,
       required String cretory}) async {
@@ -202,6 +205,7 @@ class NotificationsService {
         'title': title,
         'content': content,
         'idUser': idUser,
+        'idVideo': idvideo,
         'time': currentTime,
         'image': avartarUrl,
         'cretory': cretory,
@@ -213,11 +217,12 @@ class NotificationsService {
   }
 
   static editCheckNotiShow(
-      {required BuildContext context,required String id}) async {
+      {required BuildContext context, required String id}) async {
     try {
       CollectionReference noti =
           FirebaseFirestore.instance.collection('notifications');
-      noti.doc(id)
+      noti
+          .doc(id)
           .update({
             'check': 1,
           })

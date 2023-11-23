@@ -74,7 +74,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             onTap: () {
                               setState(() {
                                 if(item['cretory'] == 'follow')Navigator.push(context, MaterialPageRoute(builder: (context) => PeopleInfoScreen(peopleID: item['idUser']),));
-                                if(item['cretory'] == 'likeVideo')Navigator.push(context, MaterialPageRoute(builder: (context) => VideoProfileScreen(videoID: item['idUser']),));
+                                if(item['cretory'] == 'likeVideo')Navigator.push(context, MaterialPageRoute(builder: (context) => VideoProfileScreen(videoID: item['idVideo']),));
                                 NotificationsService.editCheckNotiShow(context: context,id: item.id);
                               });
                             },

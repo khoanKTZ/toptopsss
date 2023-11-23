@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_app_poly/database/services/notifi_service.dart';
+import 'package:tiktok_app_poly/views/widgets/snackbar.dart';
 
 class VideoServices {
   static likeVideo(String id) async {
@@ -9,7 +10,7 @@ class VideoServices {
         await FirebaseFirestore.instance.collection('videos').doc(id).get();
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentSnapshot docUser =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
     print(docUser.data().toString());
     if ((doc.data()! as dynamic)['likes'].contains(uid)) {
       await FirebaseFirestore.instance.collection('videos').doc(id).update({
@@ -23,8 +24,10 @@ class VideoServices {
           uidNd: doc.get('uid').toString(),
           title: "Chào bạn",
           body: 'Bạn nhận 1 lượt thích từ ${(docUser.data()! as dynamic)['fullName']}',
-          idOther: doc.get('id').toString(),
-          avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',cretory: 'likeVideo');
+          idOther: uid.toString(),
+          idVideo: doc.get('id').toString(),
+          avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',
+          cretory: 'likeVideo');
     }
   }
 
@@ -37,7 +40,7 @@ class VideoServices {
         .get();
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentSnapshot docUser =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
     if ((doc.data()! as dynamic)['likes'].contains(uid)) {
       await FirebaseFirestore.instance
           .collection('videos')
@@ -99,8 +102,10 @@ class VideoServices {
       required message,
       required uid,
       required videoID}) async {
-    DocumentSnapshot doc =
-    await FirebaseFirestore.instance.collection('videos').doc(videoID).get();
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoID)
+        .get();
     final CollectionReference users =
         FirebaseFirestore.instance.collection('users');
     CollectionReference videos =
@@ -232,4 +237,16 @@ class VideoServices {
   }
 
   static checkLike(String id) {}
+
+  static updateVideoFect(BuildContext context,String id, String collums, String values) async {
+    try{
+      CollectionReference doc = FirebaseFirestore.instance.collection('videos');
+      doc.doc(id)
+          .update({
+        collums: values,
+      }).then((value) => print("Video Updated")).catchError((error) => print("Failed to update user: $error"));
+    }catch (e){
+      print('lỗi : ${e}');
+    }
+  }
 }

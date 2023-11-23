@@ -175,6 +175,7 @@ class UserService {
       NotificationsService().sendNotification(
           uidNd: uid,
           title: "Chào bạn",
+          idVideo: '',
           body: 'Bạn nhận 1 lượt follow từ ${(docUser.data()! as dynamic)['fullName']}',
           idOther: currentUid,
           avartarUrl: '${(docUser.data()! as dynamic)['avartaURL']}',
