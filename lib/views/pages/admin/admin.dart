@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -98,37 +99,6 @@ showLogoutDialog(BuildContext context) {
       ],
     ),
   );
-}
-
-Future<List<int>?> selectAudio() async {
-  List<int>? audioBytes;
-
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-    type: FileType.audio, // Chỉ chọn các loại file âm thanh
-  );
-
-  if (result != null) {
-    if (result.files.single.bytes != null) {
-      audioBytes = result.files.single.bytes!; // Lấy dữ liệu của file âm thanh
-    }
-  }
-
-  return audioBytes;
-}
-
-Future<void> handleAudioSelectionAndNavigate(BuildContext context) async {
-  List<int>? audioBytes = await selectAudio();
-
-  // Kiểm tra nếu đã chọn file âm thanh
-  if (audioBytes != null) {
-    // Chuyển sang màn hình UploadMusicScreen và truyền dữ liệu file âm thanh
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UploadMusicScreen(audioData: audioBytes),
-      ),
-    );
-  }
 }
 
 class _AdminState extends State<admin> {
@@ -252,14 +222,26 @@ class _AdminState extends State<admin> {
                     try {
                       String? filePath = await FilePicker.platform
                           .pickFiles(
-                            type: FileType.audio, // Chỉ chọn file âm thanh
-                            allowCompression: true, // Cho phép nén file
+                            type: FileType.audio,
+                            allowCompression: true,
                           )
                           .then((value) => value?.files.single.path);
 
                       if (filePath != null) {
-                        print('Đường dẫn file âm thanh: $filePath');
-                        selectAudio();
+                        final file = File(filePath);
+                        if (await file.exists()) {
+                          print('Đường dẫn file âm thanh: $filePath');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  UploadMusicScreen(audioFilePath: filePath),
+                            ),
+                          );
+                        } else {
+                          print(
+                              'File không tồn tại hoặc đường dẫn không hợp lệ.');
+                        }
                       }
                     } catch (e) {
                       print('Lỗi khi lấy file âm thanh: $e');
